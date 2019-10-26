@@ -3,13 +3,14 @@
 namespace MikeFrancis\LaravelUnleash\Strategies;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
 
 class ApplicationHostnameStrategy implements Strategy
 {
   public function isEnabled(array $params, Request $request): bool
   {
-    $applicationHostnames = explode(',', array_get($params, 'hostNames', ''));
+    $applicationHostnames = explode(',', Arr::get($params, 'hostNames', ''));
 
     if (count($applicationHostnames) === 0) {
       return false;

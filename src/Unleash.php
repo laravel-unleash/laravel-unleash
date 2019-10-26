@@ -60,13 +60,13 @@ class Unleash
   public function isFeatureEnabled(string $name): bool
   {
     $feature = $this->getFeature($name);
-    $isEnabled = array_get($feature, 'enabled', false);
+    $isEnabled = Arr::get($feature, 'enabled', false);
 
     if (!$isEnabled) {
       return false;
     }
 
-    $strategies = array_get($feature, 'strategies', []);
+    $strategies = Arr::get($feature, 'strategies', []);
     $allStrategies = $this->config->get('unleash.strategies', []);
 
     foreach ($strategies as $strategyData) {
@@ -82,7 +82,7 @@ class Unleash
         throw new \Exception("${$className} does not implement base Strategy.");
       }
 
-      $params = array_get($strategyData, 'parameters', []);
+      $params = Arr::get($strategyData, 'parameters', []);
 
       if (!$strategy->isEnabled($params, $this->request)) {
         return false;
@@ -103,7 +103,7 @@ class Unleash
       $response = $this->client->get('/api/client/features');
       $data = json_decode((string) $response->getBody(), true);
 
-      return array_get($data, 'features', []);
+      return Arr::get($data, 'features', []);
     } catch (\InvalidArgumentException $e) {
       return [];
     }

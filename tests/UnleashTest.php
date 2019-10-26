@@ -235,52 +235,52 @@ class UnleashTest extends TestCase
     $this->assertFalse($unleash->isFeatureEnabled($featureName));
   }
 
-  // public function testIsFeatureDisabledWithStrategyThatDoesNotImplementBaseStrategy()
-  // {
-  //   $featureName = 'someFeature';
+  public function testIsFeatureDisabledWithStrategyThatDoesNotImplementBaseStrategy()
+  {
+    $featureName = 'someFeature';
 
-  //   $this->mockHandler->append(new Response(200, [], json_encode([
-  //     'features' => [
-  //       [
-  //         'name' => $featureName,
-  //         'enabled' => true,
-  //         'strategies' => [
-  //           [
-  //             'name' => 'testStrategy',
-  //           ],
-  //         ],
-  //       ],
-  //     ],
-  //   ])));
+    $this->mockHandler->append(new Response(200, [], json_encode([
+      'features' => [
+        [
+          'name' => $featureName,
+          'enabled' => true,
+          'strategies' => [
+            [
+              'name' => 'testStrategy',
+            ],
+          ],
+        ],
+      ],
+    ])));
 
-  //   $cache = $this->createMock(Cache::class);
+    $cache = $this->createMock(Cache::class);
 
-  //   $config = $this->createMock(Config::class);
-  //   $config->expects($this->at(0))
-  //     ->method('get')
-  //     ->with('unleash.isEnabled')
-  //     ->willReturn(true);
-  //   $config->expects($this->at(1))
-  //     ->method('get')
-  //     ->with('unleash.cache.isEnabled')
-  //     ->willReturn(false);
-  //   $config->expects($this->at(2))
-  //     ->method('get')
-  //     ->with('unleash.strategies')
-  //     ->willReturn([
-  //       'testStrategy' => TestNonImplementedStrategy::class,
-  //     ]);
+    $config = $this->createMock(Config::class);
+    $config->expects($this->at(0))
+      ->method('get')
+      ->with('unleash.isEnabled')
+      ->willReturn(true);
+    $config->expects($this->at(1))
+      ->method('get')
+      ->with('unleash.cache.isEnabled')
+      ->willReturn(false);
+    $config->expects($this->at(2))
+      ->method('get')
+      ->with('unleash.strategies')
+      ->willReturn([
+        'testStrategy' => TestNonImplementedStrategy::class,
+      ]);
 
-  //   $request = $this->createMock(Request::class);
+    $request = $this->createMock(Request::class);
 
-  //   $unleash = new Unleash($this->client, $cache, $config, $request);
+    $unleash = new Unleash($this->client, $cache, $config, $request);
 
-  //   try {
-  //     $unleash->isFeatureEnabled($featureName);
-  //   } catch (\Exception $e) {
-  //     $this->assertStringContainsString('does not implement base Strategy', $e->getMessage());
-  //   }
-  // }
+    try {
+      $unleash->isFeatureEnabled($featureName);
+    } catch (\Exception $e) {
+      $this->assertNotEmpty($e);
+    }
+  }
 
   public function testIsFeatureDisabled()
   {
