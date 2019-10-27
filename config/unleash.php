@@ -1,12 +1,12 @@
 <?php
 
 return [
-  // URL of the Unleash server. 
+  // URL of the Unleash server.
   // This should be the base URL, do not include /api or anything else.
   'url' => env('UNLEASH_URL'),
 
   // Globally control whether Unleash is enabled or disabled.
-  // If not enabled, no API requests will be made and all "enabled" checks will return `false` and 
+  // If not enabled, no API requests will be made and all "enabled" checks will return `false` and
   // "disabled" checks will return `true`.
   'isEnabled' => env('UNLEASH_ENABLED', true),
 
@@ -16,9 +16,9 @@ return [
     'ttl' => 3600,
   ],
 
-  // Mapping of strategies used to guard features on Unleash. The default strategies are already 
-  // mapped below, and more strategies can be added - they just need to implement the 
-  // `\MikeFrancis\LaravelUnleash\Strategies\Strategy` interface. If you would like to disable 
+  // Mapping of strategies used to guard features on Unleash. The default strategies are already
+  // mapped below, and more strategies can be added - they just need to implement the
+  // `\MikeFrancis\LaravelUnleash\Strategies\Strategy` interface. If you would like to disable
   // a built-in strategy, please comment it out or remove it below.
   'strategies' => [
     'applicationHostname' => \MikeFrancis\LaravelUnleash\Strategies\ApplicationHostnameStrategy::class,
