@@ -8,309 +8,344 @@ use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
-use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
+use MikeFrancis\LaravelUnleash\Tests\Stubs\ImplementedStrategy;
+use MikeFrancis\LaravelUnleash\Tests\Stubs\NonImplementedStrategy;
 use MikeFrancis\LaravelUnleash\Unleash;
 use PHPUnit\Framework\TestCase;
 
-class TestImplementedStrategy implements Strategy
-{
-  public function isEnabled(array $params, Request $request): bool
-  {
-    return true;
-  }
-}
-
-class TestNonImplementedStrategy
-{
-  public function isEnabled(array $params, Request $request): bool
-  {
-    return true;
-  }
-}
-
 class UnleashTest extends TestCase
 {
-  protected $mockHandler;
+    protected $mockHandler;
 
-  protected $client;
+    protected $client;
 
-  protected function setUp(): void
-  {
-    parent::setUp();
+    protected function setUp(): void
+    {
+        parent::setUp();
 
-    $this->mockHandler = new MockHandler();
+        $this->mockHandler = new MockHandler();
 
-    $this->client = new Client([
-      'handler' => $this->mockHandler,
-    ]);
-  }
-
-  public function testFeaturesCanBeCached()
-  {
-    $featureName = 'someFeature';
-
-    $cache = $this->createMock(Cache::class);
-    $cache->expects($this->once())
-      ->method('remember')
-      ->willReturn([
-        [
-          'name' => $featureName,
-          'enabled' => true,
-        ],
-      ]);
-
-    $config = $this->createMock(Config::class);
-    $config->expects($this->at(0))
-      ->method('get')
-      ->with('unleash.isEnabled')
-      ->willReturn(true);
-    $config->expects($this->at(1))
-      ->method('get')
-      ->with('unleash.cache.isEnabled')
-      ->willReturn(true);
-
-    $request = $this->createMock(Request::class);
-
-    $unleash = new Unleash($this->client, $cache, $config, $request);
-
-    $this->assertTrue($unleash->isFeatureEnabled($featureName));
-  }
-
-  public function testFeatureDetectionCanBeDisabled()
-  {
-    $cache = $this->createMock(Cache::class);
-
-    $config = $this->createMock(Config::class);
-    $config->expects($this->at(0))
-      ->method('get')
-      ->with('unleash.isEnabled')
-      ->willReturn(false);
-
-    $request = $this->createMock(Request::class);
-
-    $unleash = new Unleash($this->client, $cache, $config, $request);
-
-    $this->assertFalse($unleash->isFeatureEnabled('someFeature'));
-  }
-
-  public function testCanHandleErrorsFromUnleash()
-  {
-    $featureName = 'someFeature';
-
-    $this->mockHandler->append(new Response(200, [], 'lol'));
-
-    $cache = $this->createMock(Cache::class);
-
-    $config = $this->createMock(Config::class);
-    $config->expects($this->at(0))
-      ->method('get')
-      ->with('unleash.isEnabled')
-      ->willReturn(true);
-    $config->expects($this->at(1))
-      ->method('get')
-      ->with('unleash.cache.isEnabled')->willReturn(false);
-
-    $request = $this->createMock(Request::class);
-
-    $unleash = new Unleash($this->client, $cache, $config, $request);
-
-    $this->assertTrue($unleash->isFeatureDisabled($featureName));
-  }
-
-  public function testIsFeatureEnabled()
-  {
-    $featureName = 'someFeature';
-
-    $this->mockHandler->append(new Response(200, [], json_encode([
-      'features' => [
-        [
-          'name' => $featureName,
-          'enabled' => true,
-        ],
-      ],
-    ])));
-
-    $cache = $this->createMock(Cache::class);
-
-    $config = $this->createMock(Config::class);
-    $config->expects($this->at(0))
-      ->method('get')
-      ->with('unleash.isEnabled')
-      ->willReturn(true);
-    $config->expects($this->at(1))
-      ->method('get')
-      ->with('unleash.cache.isEnabled')
-      ->willReturn(false);
-
-    $request = $this->createMock(Request::class);
-
-    $unleash = new Unleash($this->client, $cache, $config, $request);
-
-    $this->assertTrue($unleash->isFeatureEnabled($featureName));
-  }
-
-  public function testIsFeatureEnabledWithValidStrategy()
-  {
-    $featureName = 'someFeature';
-
-    $this->mockHandler->append(new Response(200, [], json_encode([
-      'features' => [
-        [
-          'name' => $featureName,
-          'enabled' => true,
-          'strategies' => [
+        $this->client = new Client(
             [
-              'name' => 'testStrategy',
-            ],
-          ],
-        ],
-      ],
-    ])));
-
-    $cache = $this->createMock(Cache::class);
-
-    $config = $this->createMock(Config::class);
-    $config->expects($this->at(0))
-      ->method('get')
-      ->with('unleash.isEnabled')
-      ->willReturn(true);
-    $config->expects($this->at(1))
-      ->method('get')
-      ->with('unleash.cache.isEnabled')
-      ->willReturn(false);
-    $config->expects($this->at(2))
-      ->method('get')
-      ->with('unleash.strategies')
-      ->willReturn([
-        'testStrategy' => TestImplementedStrategy::class,
-      ]);
-
-    $request = $this->createMock(Request::class);
-
-    $unleash = new Unleash($this->client, $cache, $config, $request);
-
-    $this->assertTrue($unleash->isFeatureEnabled($featureName));
-  }
-
-  public function testIsFeatureDisabledWithInvalidStrategy()
-  {
-    $featureName = 'someFeature';
-
-    $this->mockHandler->append(new Response(200, [], json_encode([
-      'features' => [
-        [
-          'name' => $featureName,
-          'enabled' => true,
-          'strategies' => [
-            [
-              'name' => 'testStrategy',
-            ],
-          ],
-        ],
-      ],
-    ])));
-
-    $cache = $this->createMock(Cache::class);
-
-    $config = $this->createMock(Config::class);
-    $config->expects($this->at(0))
-      ->method('get')
-      ->with('unleash.isEnabled')
-      ->willReturn(true);
-    $config->expects($this->at(1))
-      ->method('get')
-      ->with('unleash.cache.isEnabled')
-      ->willReturn(false);
-    $config->expects($this->at(2))
-      ->method('get')
-      ->with('unleash.strategies')
-      ->willReturn([
-        'invalidTestStrategy' => TestImplementedStrategy::class,
-      ]);
-
-    $request = $this->createMock(Request::class);
-
-    $unleash = new Unleash($this->client, $cache, $config, $request);
-
-    $this->assertFalse($unleash->isFeatureEnabled($featureName));
-  }
-
-  public function testIsFeatureDisabledWithStrategyThatDoesNotImplementBaseStrategy()
-  {
-    $featureName = 'someFeature';
-
-    $this->mockHandler->append(new Response(200, [], json_encode([
-      'features' => [
-        [
-          'name' => $featureName,
-          'enabled' => true,
-          'strategies' => [
-            [
-              'name' => 'testStrategy',
-            ],
-          ],
-        ],
-      ],
-    ])));
-
-    $cache = $this->createMock(Cache::class);
-
-    $config = $this->createMock(Config::class);
-    $config->expects($this->at(0))
-      ->method('get')
-      ->with('unleash.isEnabled')
-      ->willReturn(true);
-    $config->expects($this->at(1))
-      ->method('get')
-      ->with('unleash.cache.isEnabled')
-      ->willReturn(false);
-    $config->expects($this->at(2))
-      ->method('get')
-      ->with('unleash.strategies')
-      ->willReturn([
-        'testStrategy' => TestNonImplementedStrategy::class,
-      ]);
-
-    $request = $this->createMock(Request::class);
-
-    $unleash = new Unleash($this->client, $cache, $config, $request);
-
-    try {
-      $unleash->isFeatureEnabled($featureName);
-    } catch (\Exception $e) {
-      $this->assertNotEmpty($e);
+                'handler' => $this->mockHandler,
+            ]
+        );
     }
-  }
 
-  public function testIsFeatureDisabled()
-  {
-    $featureName = 'someFeature';
+    public function testFeaturesCanBeCached()
+    {
+        $featureName = 'someFeature';
 
-    $this->mockHandler->append(new Response(200, [], json_encode([
-      'features' => [
-        [
-          'name' => $featureName,
-          'enabled' => false,
-        ],
-      ],
-    ])));
+        $cache = $this->createMock(Cache::class);
+        $cache->expects($this->once())
+            ->method('remember')
+            ->willReturn(
+                [
+                    [
+                        'name' => $featureName,
+                        'enabled' => true,
+                    ],
+                ]
+            );
 
-    $cache = $this->createMock(Cache::class);
+        $config = $this->createMock(Config::class);
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(1))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(true);
 
-    $config = $this->createMock(Config::class);
-    $config->expects($this->at(0))
-      ->method('get')
-      ->with('unleash.isEnabled')
-      ->willReturn(true);
-    $config->expects($this->at(1))
-      ->method('get')
-      ->with('unleash.cache.isEnabled')
-      ->willReturn(false);
+        $request = $this->createMock(Request::class);
 
-    $request = $this->createMock(Request::class);
+        $unleash = new Unleash($this->client, $cache, $config, $request);
 
-    $unleash = new Unleash($this->client, $cache, $config, $request);
+        $this->assertTrue($unleash->isFeatureEnabled($featureName));
+    }
 
-    $this->assertTrue($unleash->isFeatureDisabled($featureName));
-  }
+    public function testFeatureDetectionCanBeDisabled()
+    {
+        $cache = $this->createMock(Cache::class);
+
+        $config = $this->createMock(Config::class);
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(false);
+
+        $request = $this->createMock(Request::class);
+
+        $unleash = new Unleash($this->client, $cache, $config, $request);
+
+        $this->assertFalse($unleash->isFeatureEnabled('someFeature'));
+    }
+
+    public function testCanHandleErrorsFromUnleash()
+    {
+        $featureName = 'someFeature';
+
+        $this->mockHandler->append(new Response(200, [], 'lol'));
+
+        $cache = $this->createMock(Cache::class);
+
+        $config = $this->createMock(Config::class);
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(1))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')->willReturn(false);
+
+        $request = $this->createMock(Request::class);
+
+        $unleash = new Unleash($this->client, $cache, $config, $request);
+
+        $this->assertTrue($unleash->isFeatureDisabled($featureName));
+    }
+
+    public function testIsFeatureEnabled()
+    {
+        $featureName = 'someFeature';
+
+        $this->mockHandler->append(
+            new Response(
+                200,
+                [],
+                json_encode(
+                    [
+                        'features' => [
+                            [
+                                'name' => $featureName,
+                                'enabled' => true,
+                            ],
+                        ],
+                    ]
+                )
+            )
+        );
+
+        $cache = $this->createMock(Cache::class);
+
+        $config = $this->createMock(Config::class);
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(1))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(false);
+
+        $request = $this->createMock(Request::class);
+
+        $unleash = new Unleash($this->client, $cache, $config, $request);
+
+        $this->assertTrue($unleash->isFeatureEnabled($featureName));
+    }
+
+    public function testIsFeatureEnabledWithValidStrategy()
+    {
+        $featureName = 'someFeature';
+
+        $this->mockHandler->append(
+            new Response(
+                200,
+                [],
+                json_encode(
+                    [
+                        'features' => [
+                            [
+                                'name' => $featureName,
+                                'enabled' => true,
+                                'strategies' => [
+                                    [
+                                        'name' => 'testStrategy',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ]
+                )
+            )
+        );
+
+        $cache = $this->createMock(Cache::class);
+
+        $config = $this->createMock(Config::class);
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(1))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(false);
+        $config->expects($this->at(2))
+            ->method('get')
+            ->with('unleash.strategies')
+            ->willReturn(
+                [
+                    'testStrategy' => ImplementedStrategy::class,
+                ]
+            );
+
+        $request = $this->createMock(Request::class);
+
+        $unleash = new Unleash($this->client, $cache, $config, $request);
+
+        $this->assertTrue($unleash->isFeatureEnabled($featureName));
+    }
+
+    public function testIsFeatureDisabledWithInvalidStrategy()
+    {
+        $featureName = 'someFeature';
+
+        $this->mockHandler->append(
+            new Response(
+                200,
+                [],
+                json_encode(
+                    [
+                        'features' => [
+                            [
+                                'name' => $featureName,
+                                'enabled' => true,
+                                'strategies' => [
+                                    [
+                                        'name' => 'testStrategy',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ]
+                )
+            )
+        );
+
+        $cache = $this->createMock(Cache::class);
+
+        $config = $this->createMock(Config::class);
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(1))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(false);
+        $config->expects($this->at(2))
+            ->method('get')
+            ->with('unleash.strategies')
+            ->willReturn(
+                [
+                    'invalidTestStrategy' => ImplementedStrategy::class,
+                ]
+            );
+
+        $request = $this->createMock(Request::class);
+
+        $unleash = new Unleash($this->client, $cache, $config, $request);
+
+        $this->assertFalse($unleash->isFeatureEnabled($featureName));
+    }
+
+    public function testIsFeatureDisabledWithStrategyThatDoesNotImplementBaseStrategy()
+    {
+        $featureName = 'someFeature';
+
+        $this->mockHandler->append(
+            new Response(
+                200,
+                [],
+                json_encode(
+                    [
+                        'features' => [
+                            [
+                                'name' => $featureName,
+                                'enabled' => true,
+                                'strategies' => [
+                                    [
+                                        'name' => 'testStrategy',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ]
+                )
+            )
+        );
+
+        $cache = $this->createMock(Cache::class);
+
+        $config = $this->createMock(Config::class);
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(1))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(false);
+        $config->expects($this->at(2))
+            ->method('get')
+            ->with('unleash.strategies')
+            ->willReturn(
+                [
+                    'testStrategy' => NonImplementedStrategy::class,
+                ]
+            );
+
+        $request = $this->createMock(Request::class);
+
+        $unleash = new Unleash($this->client, $cache, $config, $request);
+
+        try {
+            $unleash->isFeatureEnabled($featureName);
+        } catch (\Exception $e) {
+            $this->assertNotEmpty($e);
+        }
+    }
+
+    public function testIsFeatureDisabled()
+    {
+        $featureName = 'someFeature';
+
+        $this->mockHandler->append(
+            new Response(
+                200,
+                [],
+                json_encode(
+                    [
+                        'features' => [
+                            [
+                                'name' => $featureName,
+                                'enabled' => false,
+                            ],
+                        ],
+                    ]
+                )
+            )
+        );
+
+        $cache = $this->createMock(Cache::class);
+
+        $config = $this->createMock(Config::class);
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(1))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(false);
+
+        $request = $this->createMock(Request::class);
+
+        $unleash = new Unleash($this->client, $cache, $config, $request);
+
+        $this->assertTrue($unleash->isFeatureDisabled($featureName));
+    }
 }

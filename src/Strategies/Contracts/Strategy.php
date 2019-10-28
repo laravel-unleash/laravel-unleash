@@ -6,5 +6,5 @@ use Illuminate\Http\Request;
 
 interface Strategy
 {
-  public function isEnabled(array $params, Request $request): bool;
+    public function isEnabled(array $params, Request $request): bool;
 }

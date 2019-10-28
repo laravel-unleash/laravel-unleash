@@ -13,6 +13,7 @@ install:
   - composer install --no-interaction
 
 script:
+  - ./vendor/bin/phpcs config src tests --standard=psr2
   - ./vendor/bin/phpunit --coverage-clover=coverage.xml
 
 after_success:
