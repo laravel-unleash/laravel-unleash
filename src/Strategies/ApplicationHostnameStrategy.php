@@ -10,7 +10,7 @@ class ApplicationHostnameStrategy implements Strategy
 {
     public function isEnabled(array $params, Request $request): bool
     {
-        $applicationHostnames = explode(',', Arr::get($params, 'applicationHostname', ''));
+        $applicationHostnames = explode(',', Arr::get($params, 'hostNames', ''));
 
         if (count($applicationHostnames) === 0) {
             return false;

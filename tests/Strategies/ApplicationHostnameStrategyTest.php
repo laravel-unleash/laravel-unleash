@@ -11,7 +11,7 @@ class ApplicationHostnameStrategyTest extends TestCase
     public function testWithApplicationHostname()
     {
         $params = [
-            'applicationHostname' => 'example.com,hostname.com',
+            'hostNames' => 'example.com,hostname.com',
         ];
 
         $request = $this->createMock(Request::class);
@@ -25,7 +25,7 @@ class ApplicationHostnameStrategyTest extends TestCase
     public function testWithInvalidApplicationHostname()
     {
         $params = [
-            'applicationHostname' => 'example.com,hostname.com',
+            'hostNames' => 'example.com,hostname.com',
         ];
 
         $request = $this->createMock(Request::class);
