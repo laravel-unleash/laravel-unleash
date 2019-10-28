@@ -22,6 +22,7 @@ return [
   // a built-in strategy, please comment it out or remove it below.
   'strategies' => [
     'applicationHostname' => \MikeFrancis\LaravelUnleash\Strategies\ApplicationHostnameStrategy::class,
+    'default' => \MikeFrancis\LaravelUnleash\Strategies\DefaultStrategy::class,
     'remoteAddress' => \MikeFrancis\LaravelUnleash\Strategies\RemoteAddressStrategy::class,
     'userWithIds' => \MikeFrancis\LaravelUnleash\Strategies\UserWithIdStrategy::class,
   ],
