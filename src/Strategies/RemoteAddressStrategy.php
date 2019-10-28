@@ -8,14 +8,14 @@ use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
 
 class RemoteAddressStrategy implements Strategy
 {
-  public function isEnabled(array $params, Request $request): bool
-  {
-    $remoteAddresses = explode(',', Arr::get($params, 'remoteAddress', ''));
+    public function isEnabled(array $params, Request $request): bool
+    {
+        $remoteAddresses = explode(',', Arr::get($params, 'remoteAddress', ''));
 
-    if (count($remoteAddresses) === 0) {
-      return false;
+        if (count($remoteAddresses) === 0) {
+            return false;
+        }
+
+        return in_array($request->ip(), $remoteAddresses);
     }
-
-    return in_array($request->ip(), $remoteAddresses);
-  }
 }
