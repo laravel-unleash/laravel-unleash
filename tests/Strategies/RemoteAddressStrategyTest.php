@@ -55,7 +55,7 @@ class RemoteAddressStrategyTest extends TestCase
         $params = [];
 
         $request = $this->createMock(Request::class);
-        $request->expects($this->once())->method('ip')->willReturn('1.1.1.1');
+        $request->expects($this->never())->method('ip');
 
         $strategy = new RemoteAddressStrategy();
 

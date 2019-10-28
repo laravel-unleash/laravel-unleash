@@ -41,7 +41,7 @@ class ApplicationHostnameStrategyTest extends TestCase
         $params = [];
 
         $request = $this->createMock(Request::class);
-        $request->expects($this->once())->method('getHost')->willReturn('example.com');
+        $request->expects($this->never())->method('getHost');
 
         $strategy = new ApplicationHostnameStrategy();
 

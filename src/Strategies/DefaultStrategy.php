@@ -7,8 +7,8 @@ use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
 
 class DefaultStrategy implements Strategy
 {
-  public function isEnabled(array $params, Request $request): bool
-  {
-    return true;
-  }
+    public function isEnabled(array $params, Request $request): bool
+    {
+        return true;
+    }
 }
