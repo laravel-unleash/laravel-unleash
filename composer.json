@@ -18,7 +18,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "MikeFrancis\\LaravelSecureHeaders\\Tests\\": "tests/"
+            "MikeFrancis\\LaravelUnleash\\Tests\\": "tests/"
         }
     },
     "license": "MIT",
