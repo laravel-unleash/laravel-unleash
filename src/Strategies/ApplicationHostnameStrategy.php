@@ -4,18 +4,21 @@ namespace MikeFrancis\LaravelUnleash\Strategies;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
 
 class ApplicationHostnameStrategy implements Strategy
 {
     public function isEnabled(array $params, Request $request): bool
     {
-        $applicationHostnames = explode(',', Arr::get($params, 'hostNames', ''));
+        $hostNamesString = Arr::get($params, 'hostNames');
 
-        if (count($applicationHostnames) === 0) {
+        if (!$hostNamesString || !Str::contains($hostNamesString, ',')) {
             return false;
         }
 
-        return in_array($request->getHost(), $applicationHostnames);
+        $hostNames = explode(',', $hostNamesString);
+
+        return in_array($request->getHost(), $hostNames);
     }
 }

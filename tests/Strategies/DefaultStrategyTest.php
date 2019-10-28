@@ -10,14 +10,14 @@ use stdClass;
 
 class DefaultStrategyTest extends TestCase
 {
-  public function test()
-  {
-    $params = [];
+    public function test()
+    {
+        $params = [];
 
-    $request = $this->createMock(Request::class);
+        $request = $this->createMock(Request::class);
 
-    $strategy = new DefaultStrategy();
+        $strategy = new DefaultStrategy();
 
-    $this->assertTrue($strategy->isEnabled($params, $request));
-  }
+        $this->assertTrue($strategy->isEnabled($params, $request));
+    }
 }
