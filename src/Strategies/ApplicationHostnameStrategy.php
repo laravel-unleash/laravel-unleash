@@ -11,14 +11,10 @@ class ApplicationHostnameStrategy implements Strategy
 {
     public function isEnabled(array $params, Request $request): bool
     {
-        $hostNamesString = Arr::get($params, 'hostNames');
-
-        if (!$hostNamesString || !Str::contains($hostNamesString, ',')) {
-            return false;
-        }
+        $hostNamesString = Arr::get($params, 'hostNames', '');
 
         $hostNames = explode(',', $hostNamesString);
 
-        return in_array($request->getHost(), $hostNames);
+        return $hostNamesString && in_array($request->getHost(), $hostNames);
     }
 }
