@@ -8,6 +8,21 @@ use PHPUnit\Framework\TestCase;
 
 class ApplicationHostnameStrategyTest extends TestCase
 {
+
+    public function testWithSingleApplicationHostname()
+    {
+        $params = [
+            'hostNames' => 'example.com',
+        ];
+
+        $request = $this->createMock(Request::class);
+        $request->expects($this->once())->method('getHost')->willReturn('example.com');
+
+        $strategy = new ApplicationHostnameStrategy();
+
+        $this->assertTrue($strategy->isEnabled($params, $request));
+    }
+
     public function testWithApplicationHostname()
     {
         $params = [
@@ -39,6 +54,20 @@ class ApplicationHostnameStrategyTest extends TestCase
     public function testWithoutRemoteAddressParameters()
     {
         $params = [];
+
+        $request = $this->createMock(Request::class);
+        $request->expects($this->never())->method('getHost');
+
+        $strategy = new ApplicationHostnameStrategy();
+
+        $this->assertFalse($strategy->isEnabled($params, $request));
+    }
+
+    public function testWithEmptyRemoteAddressParameters()
+    {
+        $params = [
+            'hostNames' => '',
+        ];
 
         $request = $this->createMock(Request::class);
         $request->expects($this->never())->method('getHost');
