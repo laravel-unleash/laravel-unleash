@@ -2,6 +2,7 @@
 
 namespace MikeFrancis\LaravelUnleash;
 
+use GuzzleHttp\ClientInterface;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 
@@ -50,6 +51,9 @@ class ServiceProvider extends IlluminateServiceProvider
                 return !$unleash->isFeatureEnabled($feature);
             }
         );
+
+        // Interfaces
+        $this->app->bind(ClientInterface::class, Client::class);
     }
 
     /**
