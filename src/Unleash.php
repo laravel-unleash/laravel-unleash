@@ -13,15 +13,15 @@ use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
 
 class Unleash
 {
-    private $client;
+    protected $client;
 
-    private $cache;
+    protected $cache;
 
-    private $config;
+    protected $config;
 
-    private $request;
+    protected $request;
 
-    private $features = [];
+    protected $features = [];
 
     public function __construct(ClientInterface $client, Cache $cache, Config $config, Request $request)
     {
@@ -104,7 +104,7 @@ class Unleash
         return !$this->isFeatureEnabled($name);
     }
 
-    private function fetchFeatures(): array
+    protected function fetchFeatures(): array
     {
         try {
             $response = $this->client->get('/api/client/features');
