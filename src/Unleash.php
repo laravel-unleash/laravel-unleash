@@ -115,10 +115,7 @@ class Unleash
             return [];
         }
     }
-
-    /**
-     * @return string
-     */
+    
     protected function getFeatureFlagApiUrl(): string
     {
         return '/api/client/features';
