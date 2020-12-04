@@ -107,7 +107,7 @@ class Unleash
     protected function fetchFeatures(): array
     {
         try {
-            $response = $this->client->get($this->getFeatureFlagApiUrl(), $this->getRequestOptions());
+            $response = $this->client->get($this->getFeaturesApiUrl(), $this->getRequestOptions());
             $data = json_decode((string) $response->getBody(), true);
 
             return $this->formatResponse($data);
@@ -116,7 +116,7 @@ class Unleash
         }
     }
     
-    protected function getFeatureFlagApiUrl(): string
+    protected function getFeaturesApiUrl(): string
     {
         return '/api/client/features';
     }
