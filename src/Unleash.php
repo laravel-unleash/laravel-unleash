@@ -91,7 +91,7 @@ class Unleash
 
             $params = Arr::get($strategyData, 'parameters', []);
 
-            if (!$strategy->isEnabled($params, $this->request)) {
+            if (!$strategy->isEnabled($params, $this->request) || !$this->checkExtraOk($strategyData)) {
                 return false;
             }
         }
@@ -115,7 +115,7 @@ class Unleash
             return [];
         }
     }
-    
+
     protected function getFeaturesApiUrl(): string
     {
         return '/api/client/features';
@@ -129,5 +129,10 @@ class Unleash
     protected function formatResponse($data): array
     {
         return Arr::get($data, 'features', []);
+    }
+
+    protected function checkExtraOk($strategyData): bool
+    {
+        return true;
     }
 }
