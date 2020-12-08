@@ -10,6 +10,7 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
+use Illuminate\Support\Facades\App;
 
 class Unleash
 {
@@ -90,7 +91,7 @@ class Unleash
                 return false;
             }
 
-            $strategy = new $allStrategies[$className];
+            $strategy = App::make($allStrategies[$className]);
 
             if (!$strategy instanceof Strategy) {
                 throw new \Exception("${$className} does not implement base Strategy.");

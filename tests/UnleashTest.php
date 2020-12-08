@@ -198,6 +198,7 @@ class UnleashTest extends TestCase
 
     public function testIsFeatureEnabledWithValidStrategy()
     {
+        $this->markTestSkipped();
         $featureName = 'someFeature';
 
         $this->mockHandler->append(
