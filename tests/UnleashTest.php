@@ -146,6 +146,56 @@ class UnleashTest extends TestCase
         $this->assertTrue($unleash->isFeatureEnabled($featureName));
     }
 
+    public function testGetAvailableFeaturesCollection()
+    {
+        $this->mockHandler->append(
+            new Response(
+                200,
+                [],
+                json_encode(
+                    [
+                        'features' => [
+                            [
+                                'name' => 'featureName 1',
+                                'enabled' => true,
+                            ],
+                            [
+                                'name' => 'featureName 2',
+                                'enabled' => false,
+                            ],
+                            [
+                                'name' => 'featureName 3',
+                                'enabled' => true,
+                            ],
+                        ],
+                    ]
+                )
+            )
+        );
+
+        $cache = $this->createMock(Cache::class);
+
+        $config = $this->createMock(Config::class);
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(1))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(false);
+
+        $request = $this->createMock(Request::class);
+
+        $unleash = new Unleash($this->client, $cache, $config, $request);
+
+        $availableFeaturesCollection = $unleash->getAvailableFeaturesCollection();
+        $this->assertCount(3, $availableFeaturesCollection);
+        $this->assertEquals(['featureName 1' => true], $availableFeaturesCollection->first());
+        $this->assertEquals(['featureName 2' => false], $availableFeaturesCollection[1]);
+        $this->assertEquals(['featureName 3' => true], $availableFeaturesCollection->last());
+    }
+
     public function testIsFeatureEnabledWithValidStrategy()
     {
         $featureName = 'someFeature';
