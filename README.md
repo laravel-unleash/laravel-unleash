@@ -38,6 +38,8 @@ if ($unleash->isFeatureDisabled('myAwesomeFeature')) {
 }
 
 $allFeatures = $unleash->getFeatures();
+
+$availableFeatures = $unleash->getAvailableFeaturesCollection();
 ```
 
 ### Blade
@@ -56,4 +58,8 @@ Or if a feature is **disabled**:
 @featureDisabled('myAwesomeFeature')
 Check back later for more features!
 @endfeatureDisabled
+```
+
+```php
+@featuresList()
 ```
