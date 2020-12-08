@@ -115,7 +115,7 @@ class Unleash
     {
         try {
             $response = $this->client->get($this->getFeaturesApiUrl(), $this->getRequestOptions());
-            $data = json_decode((string)$response->getBody(), true);
+            $data = json_decode((string) $response->getBody(), true);
 
             return $this->formatResponse($data);
         } catch (\InvalidArgumentException $e) {
