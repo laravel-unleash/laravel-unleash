@@ -83,7 +83,7 @@ class Unleash
                 return false;
             }
 
-            $strategy = new $allStrategies[$className];
+            $strategy = app($allStrategies[$className]);
 
             if (!$strategy instanceof Strategy) {
                 throw new \Exception("${$className} does not implement base Strategy.");
@@ -91,7 +91,7 @@ class Unleash
 
             $params = Arr::get($strategyData, 'parameters', []);
 
-            if (!$strategy->isEnabled($params, $this->request)) {
+            if (!$strategy->isEnabled($params, $this->request) || !$this->checkExtraOk($strategyData)) {
                 return false;
             }
         }
@@ -107,12 +107,32 @@ class Unleash
     protected function fetchFeatures(): array
     {
         try {
-            $response = $this->client->get('/api/client/features');
+            $response = $this->client->get($this->getFeaturesApiUrl(), $this->getRequestOptions());
             $data = json_decode((string) $response->getBody(), true);
 
-            return Arr::get($data, 'features', []);
+            return $this->formatResponse($data);
         } catch (\InvalidArgumentException $e) {
             return [];
         }
+    }
+
+    protected function getFeaturesApiUrl(): string
+    {
+        return '/api/client/features';
+    }
+
+    protected function getRequestOptions(): array
+    {
+        return [];
+    }
+
+    protected function formatResponse($data): array
+    {
+        return Arr::get($data, 'features', []);
+    }
+
+    protected function checkExtraOk($strategyData): bool
+    {
+        return true;
     }
 }
