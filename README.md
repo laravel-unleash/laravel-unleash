@@ -39,7 +39,7 @@ if ($unleash->isFeatureDisabled('myAwesomeFeature')) {
 
 $allFeatures = $unleash->getFeatures();
 
-$availableFeatures = $unleash->getAvailableFeaturesCollection();
+$availableFeatures = $unleash->getAvailableFeaturesCollection(); // collection of feature name enabled true/false pair
 ```
 
 ### Blade
@@ -60,6 +60,7 @@ Check back later for more features!
 @endfeatureDisabled
 ```
 
+Or show a list of feature name enabled true/false pair
 ```php
 @featuresList()
 ```
