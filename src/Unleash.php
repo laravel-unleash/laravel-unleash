@@ -52,6 +52,13 @@ class Unleash
         return $this->features;
     }
 
+    public function getAvailableFeaturesCollection()
+    {
+        return collect($this->features)->map(function ($feature) {
+            return [$feature['name'] => $this->isFeatureEnabled($feature['name'])];
+        });
+    }
+
     public function getFeature(string $name)
     {
         $features = $this->getFeatures();
@@ -83,7 +90,7 @@ class Unleash
                 return false;
             }
 
-            $strategy = app($allStrategies[$className]);
+            $strategy = new $allStrategies[$className];
 
             if (!$strategy instanceof Strategy) {
                 throw new \Exception("${$className} does not implement base Strategy.");
@@ -108,7 +115,7 @@ class Unleash
     {
         try {
             $response = $this->client->get($this->getFeaturesApiUrl(), $this->getRequestOptions());
-            $data = json_decode((string) $response->getBody(), true);
+            $data = json_decode((string)$response->getBody(), true);
 
             return $this->formatResponse($data);
         } catch (\InvalidArgumentException $e) {
