@@ -90,7 +90,7 @@ class Unleash
                 return false;
             }
 
-            $strategy = app($allStrategies[$className]);
+            $strategy = new $allStrategies[$className];
 
             if (!$strategy instanceof Strategy) {
                 throw new \Exception("${$className} does not implement base Strategy.");
