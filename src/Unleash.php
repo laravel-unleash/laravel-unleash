@@ -54,7 +54,7 @@ class Unleash
 
     public function getAvailableFeaturesCollection()
     {
-        return collect($this->features)->map(function ($feature) {
+        return collect($this->features)->mapWithKeys(function ($feature) {
             return [$feature['name'] => $this->isFeatureEnabled($feature['name'])];
         });
     }
