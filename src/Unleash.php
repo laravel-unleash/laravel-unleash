@@ -54,7 +54,7 @@ class Unleash
 
     public function getAvailableFeaturesCollection()
     {
-        return collect($this->features)->map(function ($feature) {
+        return collect($this->features)->mapWithKeys(function ($feature) {
             return [$feature['name'] => $this->isFeatureEnabled($feature['name'])];
         });
     }
@@ -90,7 +90,7 @@ class Unleash
                 return false;
             }
 
-            $strategy = new $allStrategies[$className];
+            $strategy = app($allStrategies[$className]);
 
             if (!$strategy instanceof Strategy) {
                 throw new \Exception("${$className} does not implement base Strategy.");
