@@ -98,7 +98,7 @@ class Unleash
 
             $params = Arr::get($strategyData, 'parameters', []);
 
-            if (!$strategy->isEnabled($params, $this->request) || !$this->checkExtraOk($strategyData)) {
+            if (!$strategy->isEnabled($params, $this->request)) {
                 return false;
             }
         }
@@ -136,10 +136,5 @@ class Unleash
     protected function formatResponse($data): array
     {
         return Arr::get($data, 'features', []);
-    }
-
-    protected function checkExtraOk($strategyData): bool
-    {
-        return true;
     }
 }
