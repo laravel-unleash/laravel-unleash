@@ -49,17 +49,7 @@ class ServiceProvider extends IlluminateServiceProvider
 
                 return !$unleash->isFeatureEnabled($feature);
             }
-        );
-
-        Blade::directive(
-            'featuresList',
-            function () {
-                $client = app(Client::class);
-                $unleash = app(Unleash::class, ['client' => $client]);
-
-                return $unleash->getAvailableFeaturesCollection();
-            }
-        );
+        )
     }
 
     /**

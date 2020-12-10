@@ -59,8 +59,3 @@ Or if a feature is **disabled**:
 Check back later for more features!
 @endfeatureDisabled
 ```
-
-Or show a list of feature name enabled true/false pair
-```php
-@featuresList()
-```
