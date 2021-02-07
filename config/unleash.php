@@ -11,9 +11,13 @@ return [
   'isEnabled' => env('UNLEASH_ENABLED', true),
 
   // Allow the Unleash API response to be cached.
+  // Default TTL is 15s
+  // Failover caching will use the last successful result from Unleash if it down.
+  // Failover is independent of regular caching.
   'cache' => [
-    'isEnabled' => false,
-    'ttl' => 3600,
+    'isEnabled' => env('UNLEASH_CACHE_ENABLED', false),
+    'ttl' => env('UNLEASH_CACHE_TTL', 15),
+    'failover' => env('UNLEASH_CACHE_FAILOVER', true),
   ],
 
   // Mapping of strategies used to guard features on Unleash. The default strategies are already
