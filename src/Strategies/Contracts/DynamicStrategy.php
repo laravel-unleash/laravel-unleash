@@ -4,12 +4,13 @@ namespace MikeFrancis\LaravelUnleash\Strategies\Contracts;
 
 use Illuminate\Http\Request;
 
-interface Strategy
+interface DynamicStrategy
 {
     /**
      * @param array $params Strategy Configuration from Unleash
      * @param Request $request Current Request
+     * @param mixed $args An arbitrary number of arguments passed to isFeatureEnabled/Disabled
      * @return bool
      */
-    public function isEnabled(array $params, Request $request): bool;
+    public function isEnabled(array $params, Request $request, ...$args): bool;
 }

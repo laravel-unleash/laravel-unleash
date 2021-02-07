@@ -41,6 +41,27 @@ $feature = $unleash->getFeature('myAwesomeFeature');
 $allFeatures = $unleash->getFeatures();
 ```
 
+### Dynamic Arguments
+
+If your strategy relies on dynamic data at runtime, you can pass additional arguments to the feature check functions:
+
+```php
+use \MikeFrancis\LaravelUnleash\Unleash;
+use Config;
+
+$unleash = app(Unleash::class);
+
+$allow_list = config('app.allow_list');
+
+if ($unleash->isFeatureEnabled('myAwesomeFeature', $allow_list)) {
+  // Congratulations, you can see this awesome feature!
+}
+
+if ($unleash->isFeatureDisabled('myAwesomeFeature', $allow_list)) {
+  // Check back later for more features!
+}
+```
+
 ### Facades
 
 You can use the `Unleash` facade:
@@ -96,3 +117,5 @@ Or if a feature is **disabled**:
 Check back later for more features!
 @endfeatureDisabled
 ```
+
+You cannot currently use dynamic strategy arguments with Blade template directives.
