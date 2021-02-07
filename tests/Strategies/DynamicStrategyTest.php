@@ -84,7 +84,7 @@ class DynamicStrategyTest extends TestCase
         $unleash = new Unleash($this->client, $cache, $config, $request);
 
         $this->assertTrue($unleash->isFeatureEnabled($featureName, 'foo', 'bar', 'baz'));
-        $this->assertFalse($unleash->isFeatureDisabled($featureName, 'foo', 'bar', 'baz'));
+        $this->assertTrue($unleash->isFeatureEnabled($featureName, 'foo', 'bar', 'baz'));
     }
 
     /**
@@ -115,6 +115,14 @@ class DynamicStrategyTest extends TestCase
             );
         $config->expects($this->at(3))
             ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(4))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(false);
+        $config->expects($this->at(5))
+            ->method('get')
             ->with('unleash.strategies')
             ->willReturn(
                 [
@@ -127,31 +135,120 @@ class DynamicStrategyTest extends TestCase
     }
 
     /**
+     * @param \PHPUnit\Framework\MockObject\MockObject $strategy
+     * @return Config|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected function getMockCacheConfig(\PHPUnit\Framework\MockObject\MockObject $strategy)
+    {
+        $config = $this->createMock(Config::class);
+
+        $i = 1;
+
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.cache.ttl')
+            ->willReturn(3600);
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.strategies')
+            ->willReturn(
+                [
+                    'testStrategy' => function () use ($strategy) {
+                        return $strategy;
+                    },
+                ]
+            );
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.cache.ttl2')
+            ->willReturn(3600);
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.strategies')
+            ->willReturn(
+                [
+                    'testStrategy' => function () use ($strategy) {
+                        return $strategy;
+                    },
+                ]
+            );
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.cache.ttl3')
+            ->willReturn(3600);
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.strategies')
+            ->willReturn(
+                [
+                    'testStrategy' => function () use ($strategy) {
+                        return $strategy;
+                    },
+                ]
+            );
+        $config->expects($this->at($i++))
+            ->method('get')
+            ->with('unleash.test')
+            ->willReturn(false);
+
+        return $config;
+    }
+
+    /**
      * @param string $featureName
      */
     protected function setMockHandler(string $featureName): void
     {
-        $this->mockHandler->append(
-            new Response(
-                200,
-                [],
-                json_encode(
-                    [
-                        'features' => [
-                            [
-                                'name' => $featureName,
-                                'enabled' => true,
-                                'strategies' => [
-                                    [
-                                        'name' => 'testStrategy',
-                                    ],
+        $response = new Response(
+            200,
+            [],
+            json_encode(
+                [
+                    'features' => [
+                        [
+                            'name' => $featureName,
+                            'enabled' => true,
+                            'strategies' => [
+                                [
+                                    'name' => 'testStrategy',
                                 ],
                             ],
                         ],
-                    ]
-                )
+                    ],
+                ]
             )
         );
+
+        $this->mockHandler->append($response);
+        $this->mockHandler->append($response);
     }
 
     protected function setUp(): void

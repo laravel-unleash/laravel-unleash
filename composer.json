@@ -3,7 +3,7 @@
     "description": "An Unleash client for Laravel",
     "type": "library",
     "require": {
-        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/guzzle": "^6.3|^7.0",
         "illuminate/support": "^5.8|^6|^7|^8",
         "illuminate/http": "^5.8|^6|^7|^8"
     },
