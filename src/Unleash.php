@@ -9,6 +9,7 @@ use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use MikeFrancis\LaravelUnleash\Strategies\Contracts\DynamicStrategy;
 use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
 
 class Unleash
@@ -64,7 +65,7 @@ class Unleash
         );
     }
 
-    public function isFeatureEnabled(string $name): bool
+    public function isFeatureEnabled(string $name, ...$args): bool
     {
         $feature = $this->getFeature($name);
         $isEnabled = Arr::get($feature, 'enabled', false);
@@ -83,15 +84,19 @@ class Unleash
                 return false;
             }
 
-            $strategy = new $allStrategies[$className];
+            if (is_callable($allStrategies[$className])) {
+                $strategy = $allStrategies[$className]();
+            } else {
+                $strategy = new $allStrategies[$className];
+            }
 
-            if (!$strategy instanceof Strategy) {
-                throw new \Exception("${$className} does not implement base Strategy.");
+            if (!$strategy instanceof Strategy && !$strategy instanceof DynamicStrategy) {
+                throw new \Exception("${$className} does not implement base Strategy/DynamicStrategy.");
             }
 
             $params = Arr::get($strategyData, 'parameters', []);
 
-            if (!$strategy->isEnabled($params, $this->request)) {
+            if (!$strategy->isEnabled($params, $this->request, ...$args)) {
                 return false;
             }
         }
@@ -99,9 +104,9 @@ class Unleash
         return $isEnabled;
     }
 
-    public function isFeatureDisabled(string $name): bool
+    public function isFeatureDisabled(string $name, ...$args): bool
     {
-        return !$this->isFeatureEnabled($name);
+        return !$this->isFeatureEnabled($name, ...$args);
     }
 
     protected function fetchFeatures(): array
