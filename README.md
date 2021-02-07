@@ -119,3 +119,45 @@ Check back later for more features!
 ```
 
 You cannot currently use dynamic strategy arguments with Blade template directives.
+
+### Middleware
+
+This package includes middleware that will deny routes depending on whether a feature is enabled or not.
+
+To use the middle, add the following to your `app/Http/Kernel.php`:
+
+```php
+protected $routeMiddleware = [
+    // other middleware
+    'feature.enabled' => \MikeFrancis\LaravelUnleash\Middleware\FeatureEnabled::class,
+    'feature.disabled' => \MikeFrancis\LaravelUnleash\Middleware\FeatureDisabled::class,
+];
+```
+
+You can then use the middleware in your routes:
+
+```php
+Route::get('/new-feature-path', function () {
+    //
+})->middleware('feature.enabled:myAwesomeFeature');
+
+Route::get('/terrible-legacy-path', function () {
+    //
+})->middleware('feature.disabled:myAwesomeFeature');
+```
+
+or in your controllers like so:
+
+```php
+class ExampleController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('feature.enabled:myAwesomeFeature');
+        // or
+        $this->middleware('feature.disabled:myAwesomeFeature');
+    }
+}
+```
+
+You cannot currently use dynamic strategy arguments with Middleware.
