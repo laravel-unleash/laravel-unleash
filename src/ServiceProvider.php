@@ -15,6 +15,10 @@ class ServiceProvider extends IlluminateServiceProvider
     public function register()
     {
         $this->mergeConfigFrom($this->getConfigPath(), 'unleash');
+        $this->app->singleton('unleash', function ($app) {
+            $client = $app->make(Client::class);
+            return $app->make(Unleash::class, ['client' => $client]);
+        });
     }
 
     /**
@@ -26,10 +30,9 @@ class ServiceProvider extends IlluminateServiceProvider
     {
         $this->publishes(
             [
-            $this->getConfigPath() => config_path('unleash.php'),
+                $this->getConfigPath() => config_path('unleash.php'),
             ]
         );
-
 
         Blade::if(
             'featureEnabled',
