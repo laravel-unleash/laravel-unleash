@@ -24,7 +24,6 @@ Documentation for configuration can be found in [config/unleash.php](https://git
 ## Usage
 
 ```php
-
 use \MikeFrancis\LaravelUnleash\Unleash;
 
 $unleash = app(Unleash::class);
@@ -37,7 +36,47 @@ if ($unleash->isFeatureDisabled('myAwesomeFeature')) {
   // Check back later for more features!
 }
 
+$feature = $unleash->getFeature('myAwesomeFeature');
+
 $allFeatures = $unleash->getFeatures();
+```
+
+### Facades
+
+You can use the `Unleash` facade:
+
+```php
+use Unleash;
+
+if (Unleash::isFeatureEnabled('myAwesomeFeature')) {
+  // Congratulations, you can see this awesome feature!
+}
+
+if (Unleash::isFeatureDisabled('myAwesomeFeature')) {
+  // Check back later for more features!
+}
+
+$feature = Unleash::getFeature('myAwesomeFeature');
+
+$allFeatures = Unleash::getFeatures();
+```
+
+or use the generically named `Feature` facade:
+
+```php
+use Feature;
+
+if (Feature::enabled('myAwesomeFeature')) {
+  // Congratulations, you can see this awesome feature!
+}
+
+if (Feature::disabled('myAwesomeFeature')) {
+  // Check back later for more features!
+}
+
+$feature = Feature::get('myAwesomeFeature');
+
+$allFeatures = Feature::all();
 ```
 
 ### Blade

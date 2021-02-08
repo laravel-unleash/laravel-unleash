@@ -32,7 +32,11 @@
         "laravel": {
             "providers": [
                 "MikeFrancis\\LaravelUnleash\\ServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "Unleash": "MikeFrancis\\LaravelUnleash\\Facades\\Unleash",
+                "Feature": "MikeFrancis\\LaravelUnleash\\Facades\\Feature"
+            }
         }
     }
 }

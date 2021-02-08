@@ -11,7 +11,7 @@ class Client extends GuzzleClient
     {
         parent::__construct(
             [
-            'base_uri' => $config->get('unleash.url'),
+                'base_uri' => $config->get('unleash.url'),
             ]
         );
     }
