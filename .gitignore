@@ -1,4 +1,5 @@
 /vendor
+/.idea
 
 .idea/
 .phpunit.result.cache

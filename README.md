@@ -24,7 +24,6 @@ Documentation for configuration can be found in [config/unleash.php](https://git
 ## Usage
 
 ```php
-
 use \MikeFrancis\LaravelUnleash\Unleash;
 
 $unleash = app(Unleash::class);
@@ -37,9 +36,70 @@ if ($unleash->isFeatureDisabled('myAwesomeFeature')) {
   // Check back later for more features!
 }
 
+$feature = $unleash->getFeature('myAwesomeFeature');
+
 $allFeatures = $unleash->getFeatures();
 
 $availableFeatures = $unleash->getAvailableFeaturesCollection(); // collection of feature name enabled true/false pair
+```
+
+### Facades
+
+You can use the `Unleash` facade:
+
+```php
+use Unleash;
+
+if (Unleash::isFeatureEnabled('myAwesomeFeature')) {
+  // Congratulations, you can see this awesome feature!
+}
+
+if (Unleash::isFeatureDisabled('myAwesomeFeature')) {
+  // Check back later for more features!
+}
+
+$feature = Unleash::getFeature('myAwesomeFeature');
+
+$allFeatures = Unleash::getFeatures();
+```
+
+or use the generically named `Feature` facade:
+
+```php
+use Feature;
+
+if (Feature::enabled('myAwesomeFeature')) {
+  // Congratulations, you can see this awesome feature!
+}
+
+if (Feature::disabled('myAwesomeFeature')) {
+  // Check back later for more features!
+}
+
+$feature = Feature::get('myAwesomeFeature');
+
+$allFeatures = Feature::all();
+```
+
+### Dynamic Arguments
+
+If your strategy relies on dynamic data at runtime, you can pass additional arguments to the feature check functions:
+
+```php
+use \MikeFrancis\LaravelUnleash\Unleash;
+use Config;
+
+$unleash = app(Unleash::class);
+
+$allowList = config('app.allow_list');
+
+if ($unleash->isFeatureEnabled('myAwesomeFeature', $allowList)) {
+  // Congratulations, you can see this awesome feature!
+}
+
+if ($unleash->isFeatureDisabled('myAwesomeFeature', $allowList)) {
+  // Check back later for more features!
+}
 ```
 
 ### Blade
@@ -59,3 +119,5 @@ Or if a feature is **disabled**:
 Check back later for more features!
 @endfeatureDisabled
 ```
+
+You cannot currently use dynamic strategy arguments with Blade template directives.
