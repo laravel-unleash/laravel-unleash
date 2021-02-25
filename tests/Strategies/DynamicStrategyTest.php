@@ -115,6 +115,14 @@ class DynamicStrategyTest extends TestCase
             );
         $config->expects($this->at(3))
             ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(4))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(false);
+        $config->expects($this->at(5))
+            ->method('get')
             ->with('unleash.strategies')
             ->willReturn(
                 [
