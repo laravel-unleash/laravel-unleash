@@ -4,6 +4,9 @@ namespace MikeFrancis\LaravelUnleash;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
+use MikeFrancis\LaravelUnleash\Unleash;
+use MikeFrancis\LaravelUnleash\Client;
+use GuzzleHttp\ClientInterface;
 
 class ServiceProvider extends IlluminateServiceProvider
 {
@@ -15,9 +18,9 @@ class ServiceProvider extends IlluminateServiceProvider
     public function register()
     {
         $this->mergeConfigFrom($this->getConfigPath(), 'unleash');
+        $this->app ->when(Unleash::class)->needs(ClientInterface::class)->give(Client::class);
         $this->app->singleton('unleash', function ($app) {
-            $client = $app->make(Client::class);
-            return $app->make(Unleash::class, ['client' => $client]);
+            return $app->make(Unleash::class);
         });
     }
 
