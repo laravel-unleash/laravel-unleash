@@ -5,6 +5,13 @@ return [
   // This should be the base URL, do not include /api or anything else.
   'url' => env('UNLEASH_URL'),
 
+  // Endpoint for accessing feature flags, on the Unleash server.
+  'features_endpoint' => env('UNLEASH_FEATURES_ENDPOINT', '/api/client/features'),
+
+  // Any options that are required for your request to the Unleash server.
+  // e.g. some servers may require headers with authentication information.
+  'request_options' => [],
+
   // Globally control whether Unleash is enabled or disabled.
   // If not enabled, no API requests will be made and all "enabled" checks will return `false` and
   // "disabled" checks will return `true`.
