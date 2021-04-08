@@ -18,7 +18,7 @@ class ServiceProvider extends IlluminateServiceProvider
     public function register()
     {
         $this->mergeConfigFrom($this->getConfigPath(), 'unleash');
-        $this->app ->when(Unleash::class)->needs(ClientInterface::class)->give(Client::class);
+        $this->app->when(Unleash::class)->needs(ClientInterface::class)->give(Client::class);
         $this->app->singleton('unleash', function ($app) {
             return $app->make(Unleash::class);
         });
