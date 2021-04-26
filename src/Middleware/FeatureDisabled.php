@@ -1,11 +1,14 @@
 <?php
+
 namespace MikeFrancis\LaravelUnleash\Middleware;
 
+use Closure;
+use Illuminate\Http\Request;
 use MikeFrancis\LaravelUnleash\Facades\Feature;
 
 class FeatureDisabled
 {
-    public function handle($request, \Closure $next, $featureName)
+    public function handle(Request $request, Closure $next, string $featureName)
     {
         if (Feature::enabled($featureName)) {
             abort(404);
