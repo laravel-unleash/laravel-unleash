@@ -140,12 +140,12 @@ class Unleash
 
     protected function getFeaturesEndpoint(): string
     {
-        return $this->config->get('unleash.features_endpoint');
+        return $this->config->get('unleash.featuresEndpoint');
     }
 
     protected function getRequestOptions(): array
     {
-        return $this->config->get('unleash.request_options');
+        return $this->config->get('unleash.requestOptions');
     }
 
     protected function formatResponse($data): array

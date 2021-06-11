@@ -358,11 +358,11 @@ class UnleashTest extends TestCase
             ->willReturn(false);
         $config->expects($this->at(2))
             ->method('get')
-            ->with('unleash.features_endpoint')
+            ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
         $config->expects($this->at(3))
             ->method('get')
-            ->with('unleash.request_options')
+            ->with('unleash.requestOptions')
             ->willReturn([]);
 
         $cache->expects($this->at(0))
@@ -395,11 +395,11 @@ class UnleashTest extends TestCase
             ->willReturn(false);
         $config->expects($this->at(7))
             ->method('get')
-            ->with('unleash.features_endpoint')
+            ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
         $config->expects($this->at(8))
             ->method('get')
-            ->with('unleash.request_options')
+            ->with('unleash.requestOptions')
             ->willReturn([]);
         $config->expects($this->at(9))
             ->method('get')
@@ -462,11 +462,11 @@ class UnleashTest extends TestCase
             ->with('unleash.cache.isEnabled')->willReturn(false);
         $config->expects($this->at(2))
             ->method('get')
-            ->with('unleash.features_endpoint')
+            ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
         $config->expects($this->at(3))
             ->method('get')
-            ->with('unleash.request_options')
+            ->with('unleash.requestOptions')
             ->willReturn([]);
 
         $request = $this->createMock(Request::class);
@@ -510,11 +510,11 @@ class UnleashTest extends TestCase
             ->willReturn(false);
         $config->expects($this->at(2))
             ->method('get')
-            ->with('unleash.features_endpoint')
+            ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
         $config->expects($this->at(3))
             ->method('get')
-            ->with('unleash.request_options')
+            ->with('unleash.requestOptions')
             ->willReturn([]);
 
         $request = $this->createMock(Request::class);
@@ -563,11 +563,11 @@ class UnleashTest extends TestCase
             ->willReturn(false);
         $config->expects($this->at(2))
             ->method('get')
-            ->with('unleash.features_endpoint')
+            ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
         $config->expects($this->at(3))
             ->method('get')
-            ->with('unleash.request_options')
+            ->with('unleash.requestOptions')
             ->willReturn([]);
         $config->expects($this->at(4))
             ->method('get')
@@ -624,11 +624,11 @@ class UnleashTest extends TestCase
             ->willReturn(false);
         $config->expects($this->at(2))
             ->method('get')
-            ->with('unleash.features_endpoint')
+            ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
         $config->expects($this->at(3))
             ->method('get')
-            ->with('unleash.request_options')
+            ->with('unleash.requestOptions')
             ->willReturn([]);
         $config->expects($this->at(4))
             ->method('get')
@@ -685,11 +685,11 @@ class UnleashTest extends TestCase
             ->willReturn(false);
         $config->expects($this->at(2))
             ->method('get')
-            ->with('unleash.features_endpoint')
+            ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
         $config->expects($this->at(3))
             ->method('get')
-            ->with('unleash.request_options')
+            ->with('unleash.requestOptions')
             ->willReturn([]);
 
         $config->expects($this->at(4))
@@ -746,11 +746,11 @@ class UnleashTest extends TestCase
             ->willReturn(false);
         $config->expects($this->at(2))
             ->method('get')
-            ->with('unleash.features_endpoint')
+            ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
         $config->expects($this->at(3))
             ->method('get')
-            ->with('unleash.request_options')
+            ->with('unleash.requestOptions')
             ->willReturn([]);
 
         $request = $this->createMock(Request::class);

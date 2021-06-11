@@ -105,11 +105,11 @@ class DynamicStrategyTest extends TestCase
             ->willReturn(false);
         $config->expects($this->at(2))
             ->method('get')
-            ->with('unleash.features_endpoint')
+            ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
         $config->expects($this->at(3))
             ->method('get')
-            ->with('unleash.request_options')
+            ->with('unleash.requestOptions')
             ->willReturn([]);
         $config->expects($this->at(4))
             ->method('get')
