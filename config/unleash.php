@@ -1,16 +1,25 @@
 <?php
 
 return [
-  // URL of the Unleash server.
-  // This should be the base URL, do not include /api or anything else.
-  'url' => env('UNLEASH_URL'),
 
-  // Endpoint for accessing feature flags, on the Unleash server.
+  // Default settings for requests to your Unleash server.
+  'requestDefaults' => [
+    // URL of the Unleash server.
+    // This should be the base URL, do not include /api or anything else.
+    'base_uri' => env('UNLEASH_URL'),
+
+    // Any other defaults for the request can be added here.
+    // e.g. your Unleash server may require headers like these.
+    //
+    // 'headers' => [
+    //   'UNLEASH-APPNAME' => env('UNLEASH_APPNAME', env('APP_ENV')),
+    //   'UNLEASH-INSTANCEID' => env('UNLEASH_INSTANCEID'),
+    // ],
+  ],
+
+  // Endpoint for accessing the feature flags, on your Unleash server.
+  // The default is /api/client/features ; your Unleash server may use a different endpoint e.g. if it houses flags for multiple projects.
   'featuresEndpoint' => env('UNLEASH_FEATURES_ENDPOINT', '/api/client/features'),
-
-  // Any options that are required for your request to the Unleash server.
-  // e.g. some servers may require headers with authentication information.
-  'requestOptions' => [],
 
   // Globally control whether Unleash is enabled or disabled.
   // If not enabled, no API requests will be made and all "enabled" checks will return `false` and
