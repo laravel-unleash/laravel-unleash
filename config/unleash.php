@@ -18,7 +18,8 @@ return [
   ],
 
   // Endpoint for accessing the feature flags, on your Unleash server.
-  // The default is /api/client/features ; your Unleash server may use a different endpoint e.g. if it houses flags for multiple projects.
+  // The default is /api/client/features;
+  // your Unleash server may use a different endpoint e.g. if it houses flags for multiple projects.
   'featuresEndpoint' => env('UNLEASH_FEATURES_ENDPOINT', '/api/client/features'),
 
   // Globally control whether Unleash is enabled or disabled.
