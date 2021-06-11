@@ -360,10 +360,6 @@ class UnleashTest extends TestCase
             ->method('get')
             ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.requestOptions')
-            ->willReturn([]);
 
         $cache->expects($this->at(0))
             ->method('forever')
@@ -374,7 +370,7 @@ class UnleashTest extends TestCase
                 ],
             ]);
 
-        $config->expects($this->at(4))
+        $config->expects($this->at(3))
             ->method('get')
             ->with('unleash.strategies')
             ->willReturn(
@@ -385,23 +381,19 @@ class UnleashTest extends TestCase
 
 
         // Request 2
-        $config->expects($this->at(5))
+        $config->expects($this->at(4))
             ->method('get')
             ->with('unleash.isEnabled')
             ->willReturn(true);
-        $config->expects($this->at(6))
+        $config->expects($this->at(5))
             ->method('get')
             ->with('unleash.cache.isEnabled')
             ->willReturn(false);
-        $config->expects($this->at(7))
+        $config->expects($this->at(6))
             ->method('get')
             ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
-        $config->expects($this->at(8))
-            ->method('get')
-            ->with('unleash.requestOptions')
-            ->willReturn([]);
-        $config->expects($this->at(9))
+        $config->expects($this->at(7))
             ->method('get')
             ->with('unleash.cache.failover')
             ->willReturn(true);
@@ -464,10 +456,6 @@ class UnleashTest extends TestCase
             ->method('get')
             ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.requestOptions')
-            ->willReturn([]);
 
         $request = $this->createMock(Request::class);
 
@@ -512,10 +500,6 @@ class UnleashTest extends TestCase
             ->method('get')
             ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.requestOptions')
-            ->willReturn([]);
 
         $request = $this->createMock(Request::class);
 
@@ -566,10 +550,6 @@ class UnleashTest extends TestCase
             ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
         $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.requestOptions')
-            ->willReturn([]);
-        $config->expects($this->at(4))
             ->method('get')
             ->with('unleash.strategies')
             ->willReturn(
@@ -628,10 +608,6 @@ class UnleashTest extends TestCase
             ->willReturn('/api/client/features');
         $config->expects($this->at(3))
             ->method('get')
-            ->with('unleash.requestOptions')
-            ->willReturn([]);
-        $config->expects($this->at(4))
-            ->method('get')
             ->with('unleash.strategies')
             ->willReturn(
                 [
@@ -689,11 +665,6 @@ class UnleashTest extends TestCase
             ->willReturn('/api/client/features');
         $config->expects($this->at(3))
             ->method('get')
-            ->with('unleash.requestOptions')
-            ->willReturn([]);
-
-        $config->expects($this->at(4))
-            ->method('get')
             ->with('unleash.strategies')
             ->willReturn(
                 [
@@ -748,10 +719,6 @@ class UnleashTest extends TestCase
             ->method('get')
             ->with('unleash.featuresEndpoint')
             ->willReturn('/api/client/features');
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.requestOptions')
-            ->willReturn([]);
 
         $request = $this->createMock(Request::class);
 
