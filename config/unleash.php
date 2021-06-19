@@ -1,13 +1,12 @@
 <?php
 
 return [
+  // URL of the Unleash server.
+  // This should be the base URL, do not include /api or anything else.
+  'url' => env('UNLEASH_URL'),
 
-  // Default settings for requests to your Unleash server.
-  'requestDefaults' => [
-    // URL of the Unleash server.
-    // This should be the base URL, do not include /api or anything else.
-    'base_uri' => env('UNLEASH_URL'),
-
+  // Other default settings for requests to your Unleash server.
+  'otherRequestDefaults' => [
     // Any other defaults for the request can be added here.
     // e.g. your Unleash server may require headers like these.
     //
