@@ -88,7 +88,7 @@ class DynamicStrategyTest extends TestCase
     }
 
     /**
-     * @param \PHPUnit\Framework\MockObject\MockObject $strategy
+     * @param  \PHPUnit\Framework\MockObject\MockObject $strategy
      * @return Config|\PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockConfig(\PHPUnit\Framework\MockObject\MockObject $strategy)
@@ -105,6 +105,10 @@ class DynamicStrategyTest extends TestCase
             ->willReturn(false);
         $config->expects($this->at(2))
             ->method('get')
+            ->with('unleash.featuresEndpoint')
+            ->willReturn('/api/client/features');
+        $config->expects($this->at(3))
+            ->method('get')
             ->with('unleash.strategies')
             ->willReturn(
                 [
@@ -113,15 +117,15 @@ class DynamicStrategyTest extends TestCase
                     },
                 ]
             );
-        $config->expects($this->at(3))
+        $config->expects($this->at(4))
             ->method('get')
             ->with('unleash.isEnabled')
             ->willReturn(true);
-        $config->expects($this->at(4))
+        $config->expects($this->at(5))
             ->method('get')
             ->with('unleash.cache.isEnabled')
             ->willReturn(false);
-        $config->expects($this->at(5))
+        $config->expects($this->at(6))
             ->method('get')
             ->with('unleash.strategies')
             ->willReturn(

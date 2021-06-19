@@ -127,7 +127,7 @@ class Unleash
 
     protected function fetchFeatures(): array
     {
-        $response = $this->client->get($this->getFeaturesApiUrl(), $this->getRequestOptions());
+        $response = $this->client->get($this->config->get('unleash.featuresEndpoint'));
 
         try {
             $data = json_decode((string)$response->getBody(), true, 512, \JSON_BIGINT_AS_STRING);
@@ -136,16 +136,6 @@ class Unleash
         }
 
         return $this->formatResponse($data);
-    }
-    
-    protected function getFeaturesApiUrl(): string
-    {
-        return '/api/client/features';
-    }
-
-    protected function getRequestOptions(): array
-    {
-        return [];
     }
 
     protected function formatResponse($data): array
