@@ -2,7 +2,7 @@
 
 namespace MikeFrancis\LaravelUnleash\Tests\Strategies;
 
-use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use MikeFrancis\LaravelUnleash\Strategies\UserWithIdStrategy;
 use PHPUnit\Framework\TestCase;
@@ -15,8 +15,8 @@ class UserWithIdStrategyTest extends TestCase
             'userIds' => '123,456',
         ];
 
-        $userMock = $this->createMock(Guard::class);
-        $userMock->expects($this->once())->method('id')->willReturn(123);
+        $userMock = $this->createMock(Authenticatable::class);
+        $userMock->expects($this->once())->method('getAuthIdentifier')->willReturn(123);
         $request = $this->createMock(Request::class);
         $request->expects($this->once())->method('user')->willReturn($userMock);
 
@@ -31,8 +31,8 @@ class UserWithIdStrategyTest extends TestCase
             'userIds' => '123,456',
         ];
 
-        $userMock = $this->createMock(Guard::class);
-        $userMock->expects($this->once())->method('id')->willReturn(789);
+        $userMock = $this->createMock(Authenticatable::class);
+        $userMock->expects($this->once())->method('getAuthIdentifier')->willReturn(789);
         $request = $this->createMock(Request::class);
         $request->expects($this->once())->method('user')->willReturn($userMock);
 
