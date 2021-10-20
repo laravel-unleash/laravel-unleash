@@ -565,6 +565,69 @@ class UnleashTest extends TestCase
         $this->assertTrue($unleash->isFeatureEnabled($featureName));
     }
 
+    public function testIsFeatureEnabledWithMultipleStrategies()
+    {
+        $featureName = 'someFeature';
+
+        $this->mockHandler->append(
+            new Response(
+                200,
+                [],
+                json_encode(
+                    [
+                        'features' => [
+                            [
+                                'name' => $featureName,
+                                'enabled' => true,
+                                'strategies' => [
+                                    [
+                                        'name' => 'testStrategy',
+                                    ],
+                                    [
+                                        'name' => 'testStrategyThatDoesNotMatch',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ]
+                )
+            )
+        );
+
+        $cache = $this->createMock(Cache::class);
+
+        $config = $this->createMock(Config::class);
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(1))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(false);
+        $config->expects($this->at(2))
+            ->method('get')
+            ->with('unleash.featuresEndpoint')
+            ->willReturn('/api/client/features');
+        $config->expects($this->at(3))
+            ->method('get')
+            ->with('unleash.strategies')
+            ->willReturn(
+                [
+                    'testStrategy' => ImplementedStrategy::class,
+                ],
+                [
+                    'testStrategyThatDoesNotMatch' => ImplementedStrategyThatDoesNotMatch::class,
+                ]
+            );
+
+        $request = $this->createMock(Request::class);
+
+        $unleash = new Unleash($this->client, $cache, $config, $request);
+
+        $this->assertTrue($unleash->isFeatureEnabled($featureName));
+    }
+
     public function testIsFeatureDisabledWithInvalidStrategy()
     {
         $featureName = 'someFeature';
@@ -726,4 +789,5 @@ class UnleashTest extends TestCase
 
         $this->assertTrue($unleash->isFeatureDisabled($featureName));
     }
+
 }
