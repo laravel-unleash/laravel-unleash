@@ -74,7 +74,7 @@ class Unleash
         $strategies = Arr::get($feature, 'strategies', []);
         $allStrategies = $this->config->get('unleash.strategies', []);
 
-        if(count($strategies) == 0) {
+        if (count($strategies) == 0) {
             return $isEnabled;
         }
 
@@ -82,7 +82,6 @@ class Unleash
             $className = $strategyData['name'];
 
             if (array_key_exists($className, $allStrategies)) {
-                
                 if (is_callable($allStrategies[$className])) {
                     $strategy = $allStrategies[$className]();
                 } else {
@@ -98,7 +97,6 @@ class Unleash
                 if ($strategy->isEnabled($params, $this->request, ...$args)) {
                     return true;
                 }
-                
             }
         }
 

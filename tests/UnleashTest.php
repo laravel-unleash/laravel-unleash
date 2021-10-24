@@ -789,5 +789,4 @@ class UnleashTest extends TestCase
 
         $this->assertTrue($unleash->isFeatureDisabled($featureName));
     }
-
 }
