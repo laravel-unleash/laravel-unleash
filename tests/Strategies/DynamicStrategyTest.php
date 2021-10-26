@@ -10,6 +10,7 @@ use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use MikeFrancis\LaravelUnleash\Tests\Stubs\ImplementedStrategy;
 use MikeFrancis\LaravelUnleash\Unleash;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class DynamicStrategyTest extends TestCase
@@ -30,7 +31,7 @@ class DynamicStrategyTest extends TestCase
 
         $strategy = $this->createMock(ImplementedStrategy::class);
         $strategy->expects($this->exactly(2))->method('isEnabled')
-            ->with([], $request)
+            ->with([], [], $request)
             ->willReturn(true);
 
         $config = $this->getMockConfig($strategy);
@@ -53,7 +54,7 @@ class DynamicStrategyTest extends TestCase
 
         $strategy = $this->createMock(ImplementedStrategy::class);
         $strategy->expects($this->exactly(2))->method('isEnabled')
-            ->with([], $request, true)
+            ->with([], [], $request, true)
             ->willReturn(true);
 
         $config = $this->getMockConfig($strategy);
@@ -76,7 +77,7 @@ class DynamicStrategyTest extends TestCase
 
         $strategy = $this->createMock(ImplementedStrategy::class);
         $strategy->expects($this->exactly(2))->method('isEnabled')
-            ->with([], $request, 'foo', 'bar', 'baz')
+            ->with([], [], $request, 'foo', 'bar', 'baz')
             ->willReturn(true);
 
         $config = $this->getMockConfig($strategy);
@@ -88,10 +89,10 @@ class DynamicStrategyTest extends TestCase
     }
 
     /**
-     * @param  \PHPUnit\Framework\MockObject\MockObject $strategy
-     * @return Config|\PHPUnit\Framework\MockObject\MockObject
+     * @param MockObject $strategy
+     * @return Config|MockObject
      */
-    protected function getMockConfig(\PHPUnit\Framework\MockObject\MockObject $strategy)
+    protected function getMockConfig(MockObject $strategy)
     {
         $config = $this->createMock(Config::class);
 

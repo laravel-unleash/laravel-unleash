@@ -7,10 +7,14 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
 
-class ApplicationHostnameStrategy implements Strategy
+class ApplicationHostnameStrategy extends Strategy
 {
-    public function isEnabled(array $params, Request $request): bool
+    public function isEnabled(array $params, array $constraints, Request $request): bool
     {
+        if (!parent::isEnabled($params, $constraints, $request)) {
+            return false;
+        }
+
         $hostNamesString = Arr::get($params, 'hostNames', '');
 
         $hostNames = explode(',', $hostNamesString);

@@ -2,11 +2,10 @@
 
 namespace MikeFrancis\LaravelUnleash\Tests\Strategies;
 
-use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use MikeFrancis\LaravelUnleash\Strategies\DefaultStrategy;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class DefaultStrategyTest extends TestCase
 {
@@ -14,10 +13,14 @@ class DefaultStrategyTest extends TestCase
     {
         $params = [];
 
+        $constraints = [];
+
         $request = $this->createMock(Request::class);
 
-        $strategy = new DefaultStrategy();
+        $config = $this->createMock(Config::class);
 
-        $this->assertTrue($strategy->isEnabled($params, $request));
+        $strategy = new DefaultStrategy($config);
+
+        $this->assertTrue($strategy->isEnabled($params, $constraints, $request));
     }
 }

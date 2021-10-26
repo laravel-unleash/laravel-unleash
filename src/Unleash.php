@@ -82,9 +82,9 @@ class Unleash
             }
 
             if (is_callable($allStrategies[$className])) {
-                $strategy = $allStrategies[$className]();
+                $strategy = $allStrategies[$className]($this->config);
             } else {
-                $strategy = new $allStrategies[$className];
+                $strategy = new $allStrategies[$className]($this->config);
             }
 
             if (!$strategy instanceof Strategy && !$strategy instanceof DynamicStrategy) {
@@ -93,7 +93,9 @@ class Unleash
 
             $params = Arr::get($strategyData, 'parameters', []);
 
-            if (!$strategy->isEnabled($params, $this->request, ...$args)) {
+            $constraints = Arr::get($strategyData, 'constraints', []);
+
+            if (!$strategy->isEnabled($params, $constraints, $this->request, ...$args)) {
                 return false;
             }
         }

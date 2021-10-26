@@ -7,10 +7,14 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
 
-class RemoteAddressStrategy implements Strategy
+class RemoteAddressStrategy extends Strategy
 {
-    public function isEnabled(array $params, Request $request): bool
+    public function isEnabled(array $params, array $constraints, Request $request): bool
     {
+        if (!parent::isEnabled($params, $constraints, $request)) {
+            return false;
+        }
+
         $remoteAddressesString = Arr::get($params, 'remoteAddress', '');
 
         if (!$remoteAddressesString || !Str::contains($remoteAddressesString, ',')) {

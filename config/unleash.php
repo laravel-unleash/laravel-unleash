@@ -16,6 +16,9 @@ return [
     // ],
   ],
 
+  // Environment string to be used for the environment constraint
+  'environment' => env('UNLEASH_ENVIRONMENT', env('APP_ENV')),
+
   // Endpoint for accessing the feature flags, on your Unleash server.
   // The default is /api/client/features;
   // your Unleash server may use a different endpoint e.g. if it houses flags for multiple projects.
@@ -37,14 +40,22 @@ return [
   ],
 
   // Mapping of strategies used to guard features on Unleash. The default strategies are already
-  // mapped below, and more strategies can be added - they just need to implement the
+  // mapped below, and more strategies can be added - they just need to extend the
   // `\MikeFrancis\LaravelUnleash\Strategies\Strategy` or
-  // `\MikeFrancis\LaravelUnleash\Strategies\DynamicStrategy` interface. If you would like to disable
+  // `\MikeFrancis\LaravelUnleash\Strategies\DynamicStrategy` abstract classes. If you would like to disable
   // a built-in strategy, please comment it out or remove it below.
   'strategies' => [
     'applicationHostname' => \MikeFrancis\LaravelUnleash\Strategies\ApplicationHostnameStrategy::class,
     'default' => \MikeFrancis\LaravelUnleash\Strategies\DefaultStrategy::class,
     'remoteAddress' => \MikeFrancis\LaravelUnleash\Strategies\RemoteAddressStrategy::class,
     'userWithId' => \MikeFrancis\LaravelUnleash\Strategies\UserWithIdStrategy::class,
+  ],
+
+  // Mapping of constraints used to guard features on Unleash. The default strategy is already
+  // mapped below, and more strategies can be added - they just need to implement the
+  // `\MikeFrancis\LaravelUnleash\Constraints\ConstraintHandler` abstract class. If you would like to disable
+  // a built-in constraint, please comment it out or remove it below.
+  'constraints' => [
+    'environment' => \MikeFrancis\LaravelUnleash\Constraints\EnvironmentConstraintHandler::class,
   ],
 ];

@@ -2,6 +2,7 @@
 
 namespace MikeFrancis\LaravelUnleash\Tests\Strategies;
 
+use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use MikeFrancis\LaravelUnleash\Strategies\RemoteAddressStrategy;
 use PHPUnit\Framework\TestCase;
@@ -14,12 +15,16 @@ class RemoteAddressStrategyTest extends TestCase
             'remoteAddress' => '1.1.1.1,2.2.2.2',
         ];
 
+        $constraints = [];
+
         $request = $this->createMock(Request::class);
         $request->expects($this->once())->method('ip')->willReturn('1.1.1.1');
 
-        $strategy = new RemoteAddressStrategy();
+        $config = $this->createMock(Config::class);
 
-        $this->assertTrue($strategy->isEnabled($params, $request));
+        $strategy = new RemoteAddressStrategy($config);
+
+        $this->assertTrue($strategy->isEnabled($params, $constraints, $request));
     }
 
     public function testWithInvalidRemoteAddress()
@@ -28,12 +33,16 @@ class RemoteAddressStrategyTest extends TestCase
             'remoteAddress' => '1.1.1.1,2.2.2.2',
         ];
 
+        $constraints = [];
+
         $request = $this->createMock(Request::class);
         $request->expects($this->once())->method('ip')->willReturn('1.1.1.2');
 
-        $strategy = new RemoteAddressStrategy();
+        $config = $this->createMock(Config::class);
 
-        $this->assertFalse($strategy->isEnabled($params, $request));
+        $strategy = new RemoteAddressStrategy($config);
+
+        $this->assertFalse($strategy->isEnabled($params, $constraints, $request));
     }
 
     public function testWithoutRequestIP()
@@ -42,23 +51,31 @@ class RemoteAddressStrategyTest extends TestCase
             'remoteAddress' => '1.1.1.1,2.2.2.2',
         ];
 
+        $constraints = [];
+
         $request = $this->createMock(Request::class);
         $request->expects($this->once())->method('ip')->willReturn(null);
 
-        $strategy = new RemoteAddressStrategy();
+        $config = $this->createMock(Config::class);
 
-        $this->assertFalse($strategy->isEnabled($params, $request));
+        $strategy = new RemoteAddressStrategy($config);
+
+        $this->assertFalse($strategy->isEnabled($params, $constraints, $request));
     }
 
     public function testWithoutRemoteAddressParameters()
     {
         $params = [];
 
+        $constraints = [];
+
         $request = $this->createMock(Request::class);
         $request->expects($this->never())->method('ip');
 
-        $strategy = new RemoteAddressStrategy();
+        $config = $this->createMock(Config::class);
 
-        $this->assertFalse($strategy->isEnabled($params, $request));
+        $strategy = new RemoteAddressStrategy($config);
+
+        $this->assertFalse($strategy->isEnabled($params, $constraints, $request));
     }
 }

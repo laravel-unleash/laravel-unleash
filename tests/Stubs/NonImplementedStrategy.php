@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class NonImplementedStrategy
 {
-    public function isEnabled(array $params, Request $request): bool
+    public function isEnabled(array $params, array $constraints, Request $request): bool
     {
         return true;
     }

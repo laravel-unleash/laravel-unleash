@@ -6,10 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
 
-class UserWithIdStrategy implements Strategy
+class UserWithIdStrategy extends Strategy
 {
-    public function isEnabled(array $params, Request $request): bool
+    public function isEnabled(array $params, array $constraints, Request $request): bool
     {
+        if (!parent::isEnabled($params, $constraints, $request)) {
+            return false;
+        }
+
         $userIds = explode(',', Arr::get($params, 'userIds', ''));
 
         if (count($userIds) === 0 || !$user = $request->user()) {
