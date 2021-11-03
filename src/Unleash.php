@@ -81,22 +81,24 @@ class Unleash
         foreach ($strategies as $strategyData) {
             $className = $strategyData['name'];
 
-            if (array_key_exists($className, $allStrategies)) {
-                if (is_callable($allStrategies[$className])) {
-                    $strategy = $allStrategies[$className]();
-                } else {
-                    $strategy = new $allStrategies[$className];
-                }
-    
-                if (!$strategy instanceof Strategy && !$strategy instanceof DynamicStrategy) {
-                    throw new \Exception("${$className} does not implement base Strategy/DynamicStrategy.");
-                }
-    
-                $params = Arr::get($strategyData, 'parameters', []);
-    
-                if ($strategy->isEnabled($params, $this->request, ...$args)) {
-                    return true;
-                }
+            if (!array_key_exists($className, $allStrategies)) {
+                continue;
+            }
+
+            if (is_callable($allStrategies[$className])) {
+                $strategy = $allStrategies[$className]();
+            } else {
+                $strategy = new $allStrategies[$className];
+            }
+
+            if (!$strategy instanceof Strategy && !$strategy instanceof DynamicStrategy) {
+                throw new \Exception("${$className} does not implement base Strategy/DynamicStrategy.");
+            }
+
+            $params = Arr::get($strategyData, 'parameters', []);
+
+            if ($strategy->isEnabled($params, $this->request, ...$args)) {
+                return true;
             }
         }
 
