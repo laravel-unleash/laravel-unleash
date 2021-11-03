@@ -74,7 +74,7 @@ class Unleash
         $strategies = Arr::get($feature, 'strategies', []);
         $allStrategies = $this->config->get('unleash.strategies', []);
 
-        if (count($strategies) == 0) {
+        if (count($strategies) === 0) {
             return $isEnabled;
         }
 
