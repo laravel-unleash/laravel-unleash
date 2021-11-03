@@ -10,6 +10,7 @@ use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use MikeFrancis\LaravelUnleash\Tests\Stubs\ImplementedStrategy;
+use MikeFrancis\LaravelUnleash\Tests\Stubs\ImplementedStrategyThatIsDisabled;
 use MikeFrancis\LaravelUnleash\Tests\Stubs\NonImplementedStrategy;
 use MikeFrancis\LaravelUnleash\Unleash;
 use PHPUnit\Framework\TestCase;
@@ -581,11 +582,11 @@ class UnleashTest extends TestCase
                                 'enabled' => true,
                                 'strategies' => [
                                     [
-                                        'name' => 'testStrategy',
+                                        'name' => 'testStrategyThatIsDisabled',
                                     ],
                                     [
-                                        'name' => 'testStrategyThatDoesNotMatch',
-                                    ],
+                                        'name' => 'testStrategy',
+                                    ]
                                 ],
                             ],
                         ],
@@ -617,7 +618,7 @@ class UnleashTest extends TestCase
                     'testStrategy' => ImplementedStrategy::class,
                 ],
                 [
-                    'testStrategyThatDoesNotMatch' => ImplementedStrategyThatDoesNotMatch::class,
+                    'testStrategyThatIsDisabled' => ImplementedStrategyThatIsDisabled::class,
                 ]
             );
 
