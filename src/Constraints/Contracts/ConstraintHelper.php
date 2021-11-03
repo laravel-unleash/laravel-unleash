@@ -28,7 +28,7 @@ trait ConstraintHelper
             $context = $constraint['contextName'];
 
             if (!array_key_exists($context, $allConstraints)) {
-                Log::warning("The ${$context} constraint is currently unsupported.");
+                Log::warning("The $context constraint is currently unsupported.");
                 continue;
             }
 
