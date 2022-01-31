@@ -7,6 +7,7 @@ return [
 
   // Other default settings for requests to your Unleash server.
   'otherRequestDefaults' => [
+      'timeout' => 1,
     // Any other defaults for the request can be added here.
     // e.g. your Unleash server may require headers like these.
     //
