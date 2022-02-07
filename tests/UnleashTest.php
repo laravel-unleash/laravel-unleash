@@ -10,6 +10,7 @@ use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use MikeFrancis\LaravelUnleash\Tests\Stubs\ImplementedStrategy;
+use MikeFrancis\LaravelUnleash\Tests\Stubs\ImplementedStrategyThatIsDisabled;
 use MikeFrancis\LaravelUnleash\Tests\Stubs\NonImplementedStrategy;
 use MikeFrancis\LaravelUnleash\Unleash;
 use PHPUnit\Framework\TestCase;
@@ -555,6 +556,69 @@ class UnleashTest extends TestCase
             ->willReturn(
                 [
                     'testStrategy' => ImplementedStrategy::class,
+                ]
+            );
+
+        $request = $this->createMock(Request::class);
+
+        $unleash = new Unleash($this->client, $cache, $config, $request);
+
+        $this->assertTrue($unleash->isFeatureEnabled($featureName));
+    }
+
+    public function testIsFeatureEnabledWithMultipleStrategies()
+    {
+        $featureName = 'someFeature';
+
+        $this->mockHandler->append(
+            new Response(
+                200,
+                [],
+                json_encode(
+                    [
+                        'features' => [
+                            [
+                                'name' => $featureName,
+                                'enabled' => true,
+                                'strategies' => [
+                                    [
+                                        'name' => 'testStrategyThatIsDisabled',
+                                    ],
+                                    [
+                                        'name' => 'testStrategy',
+                                    ]
+                                ],
+                            ],
+                        ],
+                    ]
+                )
+            )
+        );
+
+        $cache = $this->createMock(Cache::class);
+
+        $config = $this->createMock(Config::class);
+        $config->expects($this->at(0))
+            ->method('get')
+            ->with('unleash.isEnabled')
+            ->willReturn(true);
+        $config->expects($this->at(1))
+            ->method('get')
+            ->with('unleash.cache.isEnabled')
+            ->willReturn(false);
+        $config->expects($this->at(2))
+            ->method('get')
+            ->with('unleash.featuresEndpoint')
+            ->willReturn('/api/client/features');
+        $config->expects($this->at(3))
+            ->method('get')
+            ->with('unleash.strategies')
+            ->willReturn(
+                [
+                    'testStrategy' => ImplementedStrategy::class,
+                ],
+                [
+                    'testStrategyThatIsDisabled' => ImplementedStrategyThatIsDisabled::class,
                 ]
             );
 

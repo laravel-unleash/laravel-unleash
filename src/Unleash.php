@@ -74,11 +74,15 @@ class Unleash
         $strategies = Arr::get($feature, 'strategies', []);
         $allStrategies = $this->config->get('unleash.strategies', []);
 
+        if (count($strategies) === 0) {
+            return $isEnabled;
+        }
+
         foreach ($strategies as $strategyData) {
             $className = $strategyData['name'];
 
             if (!array_key_exists($className, $allStrategies)) {
-                return false;
+                continue;
             }
 
             if (is_callable($allStrategies[$className])) {
@@ -93,12 +97,12 @@ class Unleash
 
             $params = Arr::get($strategyData, 'parameters', []);
 
-            if (!$strategy->isEnabled($params, $this->request, ...$args)) {
-                return false;
+            if ($strategy->isEnabled($params, $this->request, ...$args)) {
+                return true;
             }
         }
 
-        return $isEnabled;
+        return false;
     }
 
     public function isFeatureDisabled(string $name, ...$args): bool
