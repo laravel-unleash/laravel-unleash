@@ -9,8 +9,9 @@ use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use MikeFrancis\LaravelUnleash\Strategies\Contracts\DynamicStrategy;
-use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
+use MikeFrancis\LaravelUnleash\Unleash\Context;
+use MikeFrancis\LaravelUnleash\Values\FeatureFlag;
+use MikeFrancis\LaravelUnleash\Values\FeatureFlagCollection;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use function GuzzleHttp\json_decode;
 
@@ -32,7 +33,7 @@ class Unleash
         $this->request = $request;
     }
 
-    public function getFeatures(): array
+    public function all(): FeatureFlagCollection
     {
         try {
             $features = $this->getCachedFeatures();
@@ -43,77 +44,96 @@ class Unleash
             return $features;
         } catch (TransferException | JsonException $e) {
             if ($this->config->get('unleash.cache.failover') === true) {
-                return $this->cache->get('unleash.features.failover', []);
+                return $this->cache->get('unleash.features.failover', FeatureFlagCollection::empty());
             }
         }
 
-        return [];
+        return FeatureFlagCollection::empty();
     }
 
-    public function getFeature(string $name)
+    public function get(string $name): ?FeatureFlag
     {
-        $features = $this->getFeatures();
-
-        return Arr::first(
-            $features,
-            function (array $unleashFeature) use ($name) {
-                return $name === $unleashFeature['name'];
-            }
+        return $this->all()->first(
+            function (FeatureFlag $unleashFeature) use ($name) {
+                return $name === $unleashFeature->name;
+            },
+            null
         );
     }
 
-    public function isFeatureEnabled(string $name, ...$args): bool
+    public function enabled(string $name, ...$args): bool
     {
-        $feature = $this->getFeature($name);
-        $isEnabled = Arr::get($feature, 'enabled', false);
-
-        if (!$isEnabled) {
+        $feature = $this->get($name);
+        if ($feature === null) {
             return false;
         }
 
-        $strategies = Arr::get($feature, 'strategies', []);
-        $allStrategies = $this->config->get('unleash.strategies', []);
-
-        if (count($strategies) === 0) {
-            return $isEnabled;
-        }
-
-        foreach ($strategies as $strategyData) {
-            $className = $strategyData['name'];
-
-            if (!array_key_exists($className, $allStrategies)) {
-                continue;
-            }
-
-            if (is_callable($allStrategies[$className])) {
-                $strategy = $allStrategies[$className]();
-            } else {
-                $strategy = new $allStrategies[$className];
-            }
-
-            if (!$strategy instanceof Strategy && !$strategy instanceof DynamicStrategy) {
-                throw new \Exception("${$className} does not implement base Strategy/DynamicStrategy.");
-            }
-
-            $params = Arr::get($strategyData, 'parameters', []);
-
-            if ($strategy->isEnabled($params, $this->request, ...$args)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $feature->enabled(...$args);
     }
 
-    public function isFeatureDisabled(string $name, ...$args): bool
+    public function disabled(string $name, ...$args): bool
     {
-        return !$this->isFeatureEnabled($name, ...$args);
+        return !$this->enabled($name, ...$args);
     }
 
-    protected function getCachedFeatures(): array
+    public function variant(string $name, $default = null, ?Context $context = null)
+    {
+        $feature = $this->get($name);
+        if (!$feature) {
+            return $default;
+        }
+        return $feature->variant($default, $context);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isFeatureEnabled(string $feature, ...$args): bool
+    {
+        return static::enabled($feature, ...$args);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function isFeatureDisabled(string $feature, ...$args): bool
+    {
+        return static::disabled($feature, ...$args);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getFeatures(): FeatureFlagCollection
+    {
+        return static::all();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function getFeature(string $name)
+    {
+        return static::get($name);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    public function __isset($name)
+    {
+        return isset($this->{$name});
+    }
+
+    public function __get($name)
+    {
+        return $this->{$name};
+    }
+
+    protected function getCachedFeatures(): FeatureFlagCollection
     {
         if (!$this->config->get('unleash.isEnabled')) {
-            return [];
+            return FeatureFlagCollection::empty();
         }
 
         if ($this->config->get('unleash.cache.isEnabled')) {
@@ -129,7 +149,7 @@ class Unleash
         return $this->features ?? $this->features = $this->fetchFeatures();
     }
 
-    protected function fetchFeatures(): array
+    protected function fetchFeatures(): FeatureFlagCollection
     {
         $response = $this->client->get($this->config->get('unleash.featuresEndpoint'));
 
@@ -142,8 +162,19 @@ class Unleash
         return $this->formatResponse($data);
     }
 
-    protected function formatResponse($data): array
+    protected function formatResponse($data): FeatureFlagCollection
     {
-        return Arr::get($data, 'features', []);
+        return FeatureFlagCollection::wrap(Arr::get($data, 'features', []))->map(function ($item) {
+            return new FeatureFlag(
+                $item['name'],
+                $item['enabled'],
+                $item['description'] ?? '',
+                $item['project'] ?? 'default',
+                $item['stale'] ?? false,
+                $item['type'] ?? 'release',
+                $item['strategies'] ?? [],
+                $item['variants'] ?? []
+            );
+        });
     }
 }
