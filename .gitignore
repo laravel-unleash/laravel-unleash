@@ -1,5 +1,6 @@
 /vendor
 /.idea
+/build
 
 .phpunit.result.cache
 phpunit.xml
