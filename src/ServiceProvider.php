@@ -4,8 +4,6 @@ namespace MikeFrancis\LaravelUnleash;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
-use MikeFrancis\LaravelUnleash\Unleash;
-use MikeFrancis\LaravelUnleash\Client;
 use GuzzleHttp\ClientInterface;
 
 class ServiceProvider extends IlluminateServiceProvider
@@ -43,7 +41,7 @@ class ServiceProvider extends IlluminateServiceProvider
                 $client = app(Client::class);
                 $unleash = app(Unleash::class, ['client' => $client]);
 
-                return $unleash->isFeatureEnabled($feature);
+                return $unleash->enabled($feature);
             }
         );
 
@@ -53,7 +51,7 @@ class ServiceProvider extends IlluminateServiceProvider
                 $client = app(Client::class);
                 $unleash = app(Unleash::class, ['client' => $client]);
 
-                return !$unleash->isFeatureEnabled($feature);
+                return !$unleash->enabled($feature);
             }
         );
     }

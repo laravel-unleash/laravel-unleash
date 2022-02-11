@@ -5,7 +5,7 @@ namespace MikeFrancis\LaravelUnleash\Tests\Strategies;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use MikeFrancis\LaravelUnleash\Strategies\UserWithIdStrategy;
-use PHPUnit\Framework\TestCase;
+use Orchestra\Testbench\TestCase;
 
 class UserWithIdStrategyTest extends TestCase
 {

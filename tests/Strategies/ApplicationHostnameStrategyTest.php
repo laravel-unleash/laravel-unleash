@@ -4,7 +4,7 @@ namespace MikeFrancis\LaravelUnleash\Tests\Strategies;
 
 use Illuminate\Http\Request;
 use MikeFrancis\LaravelUnleash\Strategies\ApplicationHostnameStrategy;
-use PHPUnit\Framework\TestCase;
+use Orchestra\Testbench\TestCase;
 
 class ApplicationHostnameStrategyTest extends TestCase
 {
