@@ -137,13 +137,17 @@ class Unleash
         }
 
         if ($this->config->get('unleash.cache.isEnabled')) {
-            return $this->cache->remember(
+            $features = $this->cache->remember(
                 'unleash',
                 $this->config->get('unleash.cache.ttl', self::DEFAULT_CACHE_TTL),
                 function () {
                     return $this->fetchFeatures();
                 }
             );
+            if ($features instanceof FeatureFlagCollection) {
+                return $features;
+            }
+            $this->cache->forget('unleash');
         }
 
         return $this->features ?? $this->features = $this->fetchFeatures();
