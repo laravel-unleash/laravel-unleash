@@ -57,8 +57,7 @@ class UnleashTest extends TestCase
         );
 
         $cache = $this->createMock(Cache::class);
-        $cache->expects($this->exactly(2))
-            ->method('remember')
+        $cache->method('remember')
             ->willReturn(
                 [
                     [
@@ -69,38 +68,16 @@ class UnleashTest extends TestCase
             );
 
         $config = $this->createMock(Config::class);
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.cache.ttl')
-            ->willReturn(null);
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.strategies')
-            ->willReturn(
-                [
-                    'testStrategy' => ImplementedStrategy::class,
-                ]
-            );
-        $config->expects($this->at(4))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(5))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(6))
-            ->method('get')
-            ->with('unleash.cache.ttl')
-            ->willReturn(null);
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled', 'unleash.cache.isEnabled' => true,
+                    'unleash.strategies' => [
+                        'testStrategy' => ImplementedStrategy::class,
+                    ],
+                    default => null
+                };
+            });
 
         $request = $this->createMock(Request::class);
 
@@ -134,33 +111,34 @@ class UnleashTest extends TestCase
         );
 
         $config = $this->createMock(Config::class);
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled',
+                    'unleash.cache.isEnabled',
+                    'unleash.cache.failover' => true,
+                    'unleash.cache.ttl' => 0.1,
+                    'unleash.strategies' => [
+                        'testStrategy' => ImplementedStrategy::class,
+                    ],
+                    default => null
+                };
+            });
+
+
         $cache = $this->createMock(Cache::class);
-
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.cache.ttl')
-            ->willReturn(0.1);
-
-        $cache->expects($this->at(0))
-            ->method('remember')
-            ->willReturn(
+        $cache->method('remember')
+            ->willReturnOnConsecutiveCalls(
                 [
                     [
                         'name' => $featureName,
                         'enabled' => true,
-                    ],
-                ]
+                    ]
+                ],
+                $this->throwException(new JsonException("Expected Failure: Testing")),
             );
-        $cache->expects($this->at(1))
-            ->method('forever')
+
+        $cache->method('forever')
             ->with('unleash.features.failover', [
                 [
                     'name' => $featureName,
@@ -168,40 +146,7 @@ class UnleashTest extends TestCase
                 ],
             ]);
 
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.strategies')
-            ->willReturn(
-                [
-                    'testStrategy' => ImplementedStrategy::class,
-                ]
-            );
-
-
-        // Request 2
-        $config->expects($this->at(4))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(5))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(6))
-            ->method('get')
-            ->with('unleash.cache.ttl')
-            ->willReturn(0.1);
-
-        $cache->expects($this->at(2))
-            ->method('remember')
-            ->willThrowException(new JsonException("Expected Failure: Testing"));
-
-        $config->expects($this->at(7))
-            ->method('get')
-            ->with('unleash.cache.failover')
-            ->willReturn(true);
-        $cache->expects($this->at(3))
-            ->method('get')
+        $cache->method('get')
             ->with('unleash.features.failover')
             ->willReturn(
                 [
@@ -246,72 +191,39 @@ class UnleashTest extends TestCase
         );
 
         $config = $this->createMock(Config::class);
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled',
+                    'unleash.cache.isEnabled' => true,
+                    'unleash.cache.failover' => false,
+                    'unleash.cache.ttl' => 0.1,
+                    'unleash.strategies' => [
+                        'testStrategy' => ImplementedStrategy::class,
+                    ],
+                    default => null
+                };
+            });
+
         $cache = $this->createMock(Cache::class);
-
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.cache.ttl')
-            ->willReturn(0.1);
-
-        $cache->expects($this->at(0))
-            ->method('remember')
-            ->willReturn(
+        $cache->method('remember')
+            ->willReturnOnConsecutiveCalls(
                 [
                     [
                         'name' => $featureName,
                         'enabled' => true,
-                    ],
-                ]
+                    ]
+                ],
+                $this->throwException(new JsonException("Expected Failure: Testing")),
             );
-        $cache->expects($this->at(1))
-            ->method('forever')
+
+        $cache->method('forever')
             ->with('unleash.features.failover', [
                 [
                     'name' => $featureName,
                     'enabled' => true,
                 ],
             ]);
-
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.strategies')
-            ->willReturn(
-                [
-                    'testStrategy' => ImplementedStrategy::class,
-                ]
-            );
-
-
-        // Request 2
-        $config->expects($this->at(4))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(5))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(6))
-            ->method('get')
-            ->with('unleash.cache.ttl')
-            ->willReturn(0.1);
-
-        $cache->expects($this->at(2))
-            ->method('remember')
-            ->willThrowException(new JsonException("Expected Failure: Testing"));
-
-        $config->expects($this->at(7))
-            ->method('get')
-            ->with('unleash.cache.failover')
-            ->willReturn(false);
 
         $request = $this->createMock(Request::class);
 
@@ -347,23 +259,23 @@ class UnleashTest extends TestCase
         );
 
         $config = $this->createMock(Config::class);
+
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled', 'unleash.cache.failover' => true,
+                    'unleash.cache.isEnabled' => false,
+                    'unleash.featuresEndpoint' => '/api/client/features',
+                    'unleash.strategies' => [
+                        'testStrategy' => ImplementedStrategy::class,
+                    ],
+                    default => null
+                };
+            });
+
         $cache = $this->createMock(Cache::class);
 
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(false);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.featuresEndpoint')
-            ->willReturn('/api/client/features');
-
-        $cache->expects($this->at(0))
-            ->method('forever')
+        $cache->method('forever')
             ->with('unleash.features.failover', [
                 [
                     'name' => $featureName,
@@ -371,36 +283,7 @@ class UnleashTest extends TestCase
                 ],
             ]);
 
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.strategies')
-            ->willReturn(
-                [
-                    'testStrategy' => ImplementedStrategy::class,
-                ]
-            );
-
-
-        // Request 2
-        $config->expects($this->at(4))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(5))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(false);
-        $config->expects($this->at(6))
-            ->method('get')
-            ->with('unleash.featuresEndpoint')
-            ->willReturn('/api/client/features');
-        $config->expects($this->at(7))
-            ->method('get')
-            ->with('unleash.cache.failover')
-            ->willReturn(true);
-
-        $cache->expects($this->at(1))
-            ->method('get')
+        $cache->method('get')
             ->with('unleash.features.failover')
             ->willReturn(
                 [
@@ -425,10 +308,13 @@ class UnleashTest extends TestCase
         $cache = $this->createMock(Cache::class);
 
         $config = $this->createMock(Config::class);
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(false);
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled' => false,
+                    default => null
+                };
+            });
 
         $request = $this->createMock(Request::class);
 
@@ -446,17 +332,15 @@ class UnleashTest extends TestCase
         $cache = $this->createMock(Cache::class);
 
         $config = $this->createMock(Config::class);
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')->willReturn(false);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.featuresEndpoint')
-            ->willReturn('/api/client/features');
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled' => true,
+                    'unleash.cache.isEnabled' => false,
+                    'unleash.featuresEndpoint' => '/api/client/features',
+                    default => null
+                };
+            });
 
         $request = $this->createMock(Request::class);
 
@@ -489,18 +373,15 @@ class UnleashTest extends TestCase
         $cache = $this->createMock(Cache::class);
 
         $config = $this->createMock(Config::class);
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(false);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.featuresEndpoint')
-            ->willReturn('/api/client/features');
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled' => true,
+                    'unleash.cache.isEnabled' => false,
+                    'unleash.featuresEndpoint' => '/api/client/features',
+                    default => null
+                };
+            });
 
         $request = $this->createMock(Request::class);
 
@@ -538,26 +419,18 @@ class UnleashTest extends TestCase
         $cache = $this->createMock(Cache::class);
 
         $config = $this->createMock(Config::class);
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(false);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.featuresEndpoint')
-            ->willReturn('/api/client/features');
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.strategies')
-            ->willReturn(
-                [
-                    'testStrategy' => ImplementedStrategy::class,
-                ]
-            );
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled' => true,
+                    'unleash.cache.isEnabled' => false,
+                    'unleash.featuresEndpoint' => '/api/client/features',
+                    'unleash.strategies' => [
+                            'testStrategy' => ImplementedStrategy::class,
+                    ],
+                    default => null
+                };
+            });
 
         $request = $this->createMock(Request::class);
 
@@ -598,29 +471,19 @@ class UnleashTest extends TestCase
         $cache = $this->createMock(Cache::class);
 
         $config = $this->createMock(Config::class);
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(false);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.featuresEndpoint')
-            ->willReturn('/api/client/features');
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.strategies')
-            ->willReturn(
-                [
-                    'testStrategy' => ImplementedStrategy::class,
-                ],
-                [
-                    'testStrategyThatIsDisabled' => ImplementedStrategyThatIsDisabled::class,
-                ]
-            );
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled' => true,
+                    'unleash.cache.isEnabled' => false,
+                    'unleash.featuresEndpoint' => '/api/client/features',
+                    'unleash.strategies' => [
+                        'testStrategy' => ImplementedStrategy::class,
+                        'testStrategyThatIsDisabled' => ImplementedStrategyThatIsDisabled::class,
+                    ],
+                    default => null
+                };
+            });
 
         $request = $this->createMock(Request::class);
 
@@ -658,26 +521,18 @@ class UnleashTest extends TestCase
         $cache = $this->createMock(Cache::class);
 
         $config = $this->createMock(Config::class);
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(false);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.featuresEndpoint')
-            ->willReturn('/api/client/features');
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.strategies')
-            ->willReturn(
-                [
-                    'invalidTestStrategy' => ImplementedStrategy::class,
-                ]
-            );
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled' => true,
+                    'unleash.cache.isEnabled' => false,
+                    'unleash.featuresEndpoint' => '/api/client/features',
+                    'unleash.strategies' => [
+                        'invalidTestStrategy' => ImplementedStrategy::class,
+                    ],
+                    default => null
+                };
+            });
 
         $request = $this->createMock(Request::class);
 
@@ -715,26 +570,18 @@ class UnleashTest extends TestCase
         $cache = $this->createMock(Cache::class);
 
         $config = $this->createMock(Config::class);
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(false);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.featuresEndpoint')
-            ->willReturn('/api/client/features');
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.strategies')
-            ->willReturn(
-                [
-                    'testStrategy' => NonImplementedStrategy::class,
-                ]
-            );
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled' => true,
+                    'unleash.cache.isEnabled' => false,
+                    'unleash.featuresEndpoint' => '/api/client/features',
+                    'unleash.strategies' => [
+                        'testStrategy' => NonImplementedStrategy::class,
+                    ],
+                    default => null
+                };
+            });
 
         $request = $this->createMock(Request::class);
 
@@ -771,18 +618,15 @@ class UnleashTest extends TestCase
         $cache = $this->createMock(Cache::class);
 
         $config = $this->createMock(Config::class);
-        $config->expects($this->at(0))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(false);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.featuresEndpoint')
-            ->willReturn('/api/client/features');
+        $config->method('get')
+            ->willReturnCallback(function($arg) {
+                return match ($arg) {
+                    'unleash.isEnabled' => true,
+                    'unleash.cache.isEnabled' => false,
+                    'unleash.featuresEndpoint' => '/api/client/features',
+                    default => null
+                };
+            });
 
         $request = $this->createMock(Request::class);
 

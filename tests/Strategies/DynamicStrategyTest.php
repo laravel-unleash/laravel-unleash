@@ -95,46 +95,22 @@ class DynamicStrategyTest extends TestCase
     {
         $config = $this->createMock(Config::class);
 
-        $config->expects($this->at(0))
+        $config
             ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(false);
-        $config->expects($this->at(2))
-            ->method('get')
-            ->with('unleash.featuresEndpoint')
-            ->willReturn('/api/client/features');
-        $config->expects($this->at(3))
-            ->method('get')
-            ->with('unleash.strategies')
-            ->willReturn(
-                [
-                    'testStrategy' => function () use ($strategy) {
-                        return $strategy;
-                    },
-                ]
-            );
-        $config->expects($this->at(4))
-            ->method('get')
-            ->with('unleash.isEnabled')
-            ->willReturn(true);
-        $config->expects($this->at(5))
-            ->method('get')
-            ->with('unleash.cache.isEnabled')
-            ->willReturn(false);
-        $config->expects($this->at(6))
-            ->method('get')
-            ->with('unleash.strategies')
-            ->willReturn(
-                [
-                    'testStrategy' => function () use ($strategy) {
-                        return $strategy;
-                    },
-                ]
-            );
+            ->willReturnCallback(function($arg) use ($strategy) {
+                return match ($arg) {
+                    'unleash.isEnabled' => true,
+                    'unleash.cache.isEnabled', 'unleash.cache.failover' => false,
+                    'unleash.cache.ttl' => 0.1,
+                    'unleash.featuresEndpoint' => '/api/client/features',
+                    'unleash.strategies' => [
+                        'testStrategy' => function () use ($strategy) {
+                            return $strategy;
+                        },
+                    ],
+                    default => null
+                };
+            });
         return $config;
     }
 
