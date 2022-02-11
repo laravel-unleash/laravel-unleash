@@ -8,8 +8,14 @@ use MikeFrancis\LaravelUnleash\ServiceProvider;
 
 trait MockClient
 {
+    /**
+     * @var MockHandler
+     */
     protected $mockHandler;
 
+    /**
+     * @var Client
+     */
     protected $client;
 
     protected function setUp(): void

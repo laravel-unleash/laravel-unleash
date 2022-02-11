@@ -241,6 +241,34 @@ class FeatureFlag implements \ArrayAccess
 
     protected function randomString(): string
     {
-        return bin2hex(random_bytes(random_int(0, 100000)));
+        return bin2hex(random_bytes(random_int(1, 100000)));
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'enabled' => $this->enabled,
+            'name' => $this->name,
+            'description' => $this->description,
+            'project' => $this->project,
+            'stale' => $this->stale,
+            'type' => $this->type,
+            'strategies' => $this->strategies->toArray(),
+            'variants' => $this->variants->toArray(),
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unleash = resolve(Unleash::class);
+        $this->enabled = $data['enabled'];
+        $this->name = $data['name'];
+        $this->description = $data['description'];
+        $this->project = $data['project'];
+        $this->stale = $data['stale'];
+        $this->type = $data['type'];
+
+        $this->strategies = Collection::make($data['strategies']);
+        $this->variants = Collection::make($data['variants']);
     }
 }
