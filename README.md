@@ -1,7 +1,7 @@
 # Laravel Unleash
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/56b0c6402eca49169cbeb3f404c2bff9)](https://app.codacy.com/manual/laravel-unleash/laravel-unleash?utm_source=github.com&utm_medium=referral&utm_content=laravel-unleash/laravel-unleash&utm_campaign=Badge_Grade_Dashboard)
-[![Packagist](https://img.shields.io/packagist/v/laravel-unleash/laravel-unleash)](https://packagist.org/packages/laravel-unleash/laravel-unleash) [![Build Status](https://github.com/laravel-unleash/laravel-unleash/workflows/CI/badge.svg)](https://github.com/laravel-unleash/laravel-unleash/actions?query=workflow%3ACI) [![codecov](https://codecov.io/gh/laravel-unleash/laravel-unleash/branch/master/graph/badge.svg)](https://codecov.io/gh/laravel-unleash/laravel-unleash)
+[![Packagist](https://img.shields.io/packagist/v/laravel-unleash/laravel-unleash)](https://packagist.org/packages/laravel-unleash/laravel-unleash) [![Build Status](https://github.com/laravel-unleash/laravel-unleash/workflows/CI/badge.svg)](https://github.com/laravel-unleash/laravel-unleash/actions?query=workflow%3ACI) [![codecov](https://codecov.io/gh/laravel-unleash/laravel-unleash/branch/main/graph/badge.svg)](https://codecov.io/gh/laravel-unleash/laravel-unleash)
 
 An [Unleash](https://unleash.github.io) client for Laravel.
 
@@ -19,7 +19,7 @@ php artisan vendor:publish --provider="LaravelUnleash\ServiceProvider"
 
 ## Configuration
 
-Documentation for configuration can be found in [config/unleash.php](https://github.com/laravel-unleash/laravel-unleash/blob/master/config/unleash.php).
+Documentation for configuration can be found in [config/unleash.php](https://github.com/laravel-unleash/laravel-unleash/blob/main/config/unleash.php).
 
 ## Usage
 
