@@ -1,6 +1,6 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash\Tests\Strategies;
+namespace LaravelUnleash\Tests\Strategies;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -8,8 +8,8 @@ use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
-use MikeFrancis\LaravelUnleash\Tests\Stubs\ImplementedStrategy;
-use MikeFrancis\LaravelUnleash\Unleash;
+use LaravelUnleash\Tests\Stubs\ImplementedStrategy;
+use LaravelUnleash\Unleash;
 use PHPUnit\Framework\TestCase;
 
 class DynamicStrategyTest extends TestCase

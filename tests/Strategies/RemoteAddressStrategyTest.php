@@ -1,9 +1,9 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash\Tests\Strategies;
+namespace LaravelUnleash\Tests\Strategies;
 
 use Illuminate\Http\Request;
-use MikeFrancis\LaravelUnleash\Strategies\RemoteAddressStrategy;
+use LaravelUnleash\Strategies\RemoteAddressStrategy;
 use PHPUnit\Framework\TestCase;
 
 class RemoteAddressStrategyTest extends TestCase

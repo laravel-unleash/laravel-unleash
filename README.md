@@ -1,7 +1,7 @@
 # Laravel Unleash
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/56b0c6402eca49169cbeb3f404c2bff9)](https://app.codacy.com/manual/mikefrancis/laravel-unleash?utm_source=github.com&utm_medium=referral&utm_content=mikefrancis/laravel-unleash&utm_campaign=Badge_Grade_Dashboard)
-[![Packagist](https://img.shields.io/packagist/v/mikefrancis/laravel-unleash)](https://packagist.org/packages/mikefrancis/laravel-unleash) [![Build Status](https://github.com/mikefrancis/laravel-unleash/workflows/CI/badge.svg)](https://github.com/mikefrancis/laravel-unleash/actions?query=workflow%3ACI) [![codecov](https://codecov.io/gh/mikefrancis/laravel-unleash/branch/master/graph/badge.svg)](https://codecov.io/gh/mikefrancis/laravel-unleash)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/56b0c6402eca49169cbeb3f404c2bff9)](https://app.codacy.com/manual/laravel-unleash/laravel-unleash?utm_source=github.com&utm_medium=referral&utm_content=laravel-unleash/laravel-unleash&utm_campaign=Badge_Grade_Dashboard)
+[![Packagist](https://img.shields.io/packagist/v/laravel-unleash/laravel-unleash)](https://packagist.org/packages/laravel-unleash/laravel-unleash) [![Build Status](https://github.com/laravel-unleash/laravel-unleash/workflows/CI/badge.svg)](https://github.com/laravel-unleash/laravel-unleash/actions?query=workflow%3ACI) [![codecov](https://codecov.io/gh/laravel-unleash/laravel-unleash/branch/master/graph/badge.svg)](https://codecov.io/gh/laravel-unleash/laravel-unleash)
 
 An [Unleash](https://unleash.github.io) client for Laravel.
 
@@ -14,17 +14,17 @@ composer require mikefrancis/laravel-unleash
 Export package config:
 
 ```bash
-php artisan vendor:publish --provider="MikeFrancis\LaravelUnleash\ServiceProvider"
+php artisan vendor:publish --provider="LaravelUnleash\ServiceProvider"
 ```
 
 ## Configuration
 
-Documentation for configuration can be found in [config/unleash.php](https://github.com/mikefrancis/laravel-unleash/blob/master/config/unleash.php).
+Documentation for configuration can be found in [config/unleash.php](https://github.com/laravel-unleash/laravel-unleash/blob/master/config/unleash.php).
 
 ## Usage
 
 ```php
-use \MikeFrancis\LaravelUnleash\Unleash;
+use LaravelUnleash\Unleash;
 
 $unleash = app(Unleash::class);
 
@@ -84,7 +84,7 @@ $allFeatures = Feature::all();
 If your strategy relies on dynamic data at runtime, you can pass additional arguments to the feature check functions:
 
 ```php
-use \MikeFrancis\LaravelUnleash\Unleash;
+use LaravelUnleash\Unleash;
 use Config;
 
 $unleash = app(Unleash::class);
@@ -129,8 +129,8 @@ To use the middle, add the following to your `app/Http/Kernel.php`:
 ```php
 protected $routeMiddleware = [
     // other middleware
-    'feature.enabled' => \MikeFrancis\LaravelUnleash\Middleware\FeatureEnabled::class,
-    'feature.disabled' => \MikeFrancis\LaravelUnleash\Middleware\FeatureDisabled::class,
+    'feature.enabled' => \LaravelUnleash\Middleware\FeatureEnabled::class,
+    'feature.disabled' => \LaravelUnleash\Middleware\FeatureDisabled::class,
 ];
 ```
 

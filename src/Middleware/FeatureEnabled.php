@@ -1,10 +1,10 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash\Middleware;
+namespace LaravelUnleash\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use MikeFrancis\LaravelUnleash\Facades\Feature;
+use LaravelUnleash\Facades\Feature;
 
 class FeatureEnabled
 {

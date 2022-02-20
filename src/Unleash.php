@@ -1,6 +1,6 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash;
+namespace LaravelUnleash;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\InvalidArgumentException;
@@ -9,8 +9,8 @@ use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use MikeFrancis\LaravelUnleash\Strategies\Contracts\DynamicStrategy;
-use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
+use LaravelUnleash\Strategies\Contracts\DynamicStrategy;
+use LaravelUnleash\Strategies\Contracts\Strategy;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 use function GuzzleHttp\json_decode;
 

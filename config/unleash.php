@@ -38,13 +38,13 @@ return [
 
   // Mapping of strategies used to guard features on Unleash. The default strategies are already
   // mapped below, and more strategies can be added - they just need to implement the
-  // `\MikeFrancis\LaravelUnleash\Strategies\Strategy` or
-  // `\MikeFrancis\LaravelUnleash\Strategies\DynamicStrategy` interface. If you would like to disable
+  // `\LaravelUnleash\Strategies\Strategy` or
+  // `\LaravelUnleash\Strategies\DynamicStrategy` interface. If you would like to disable
   // a built-in strategy, please comment it out or remove it below.
   'strategies' => [
-    'applicationHostname' => \MikeFrancis\LaravelUnleash\Strategies\ApplicationHostnameStrategy::class,
-    'default' => \MikeFrancis\LaravelUnleash\Strategies\DefaultStrategy::class,
-    'remoteAddress' => \MikeFrancis\LaravelUnleash\Strategies\RemoteAddressStrategy::class,
-    'userWithId' => \MikeFrancis\LaravelUnleash\Strategies\UserWithIdStrategy::class,
+    'applicationHostname' => \LaravelUnleash\Strategies\ApplicationHostnameStrategy::class,
+    'default' => \LaravelUnleash\Strategies\DefaultStrategy::class,
+    'remoteAddress' => \LaravelUnleash\Strategies\RemoteAddressStrategy::class,
+    'userWithId' => \LaravelUnleash\Strategies\UserWithIdStrategy::class,
   ],
 ];
