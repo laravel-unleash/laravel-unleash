@@ -38,9 +38,6 @@ class Unleash
         try {
             $features = $this->getCachedFeatures();
 
-            // Always store the failover cache, in case it is turned on during failure scenarios.
-            $this->cache->forever('unleash.features.failover', $features);
-
             return $features;
         } catch (TransferException | JsonException $e) {
             if ($this->config->get('unleash.cache.failover') === true) {
@@ -163,7 +160,12 @@ class Unleash
             throw new JsonException('Could not decode unleash response body.', $e->getCode(), $e);
         }
 
-        return $this->formatResponse($data);
+        $response = $this->formatResponse($data);
+
+        // Always store the failover cache, in case it is turned on during failure scenarios.
+        $this->cache->forever('unleash.features.failover', $response);
+
+        return $response;
     }
 
     protected function formatResponse($data): FeatureFlagCollection
