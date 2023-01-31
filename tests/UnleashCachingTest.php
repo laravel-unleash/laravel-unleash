@@ -3,12 +3,14 @@
 namespace MikeFrancis\LaravelUnleash\Tests;
 
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Config\Repository;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use MikeFrancis\LaravelUnleash\Unleash;
 use MikeFrancis\LaravelUnleash\Values\FeatureFlag;
 use MikeFrancis\LaravelUnleash\Values\FeatureFlagCollection;
+use Mockery\MockInterface;
 use Orchestra\Testbench\TestCase;
 
 class UnleashCachingTest extends TestCase
@@ -161,20 +163,21 @@ class UnleashCachingTest extends TestCase
             new Response(500)
         );
 
-        $cache = $this->createMock(Cache::class);
-        $cache->expects($this->at(0))
-            ->method('forever')
-            ->with('unleash.features.failover', new FeatureFlagCollection([
+        $cache = $this->mock(Cache::class, function (MockInterface $cache) use ($featureName) {
+            $cache->expects('forever')
+                ->once()
+                ->withSomeOfArgs('unleash.features.failover')
+                ->andReturn(
+                    new FeatureFlagCollection([
+                        new FeatureFlag($featureName, true)
+                    ])
+                );
+
+            $cache->expects('get')->once()->withSomeOfArgs('unleash.features.failover')->andReturn(new FeatureFlagCollection([
                 new FeatureFlag($featureName, true)
             ]));
-        $cache->expects($this->at(1))
-            ->method('get')
-            ->with('unleash.features.failover')
-            ->willReturn(
-                new FeatureFlagCollection([
-                    new FeatureFlag($featureName, true)
-                ])
-            );
+        });
+
 
         Config::set('unleash.isEnabled', true);
         Config::set('unleash.cache.isEnabled', false);
@@ -183,10 +186,10 @@ class UnleashCachingTest extends TestCase
 
         $request = $this->createMock(Request::class);
 
-        $unleash = new Unleash($this->client, $cache, Config::getFacadeRoot(), $request);
+        $unleash = new Unleash($this->client, $cache, resolve(Repository::class), $request);
         $this->assertTrue($unleash->enabled($featureName), "Uncached Request");
 
-        $unleash = new Unleash($this->client, $cache, Config::getFacadeRoot(), $request);
+        $unleash = new Unleash($this->client, $cache, resolve(Repository::class), $request);
         $this->assertTrue($unleash->enabled($featureName), "Cached Request");
     }
 
@@ -241,13 +244,13 @@ class UnleashCachingTest extends TestCase
 
         $request = $this->createMock(Request::class);
 
-        $unleash = new Unleash($this->client, $cache, Config::getFacadeRoot(), $request);
+        $unleash = new Unleash($this->client, $cache, resolve(Repository::class), $request);
         $this->assertTrue($unleash->enabled($featureName));
 
-        $unleash = new Unleash($this->client, $cache, Config::getFacadeRoot(), $request);
+        $unleash = new Unleash($this->client, $cache, resolve(Repository::class), $request);
         $this->assertTrue($unleash->enabled($featureName));
 
-        $unleash = new Unleash($this->client, $cache, Config::getFacadeRoot(), $request);
+        $unleash = new Unleash($this->client, $cache, resolve(Repository::class), $request);
         $this->assertTrue($unleash->enabled($featureName));
         $this->assertEquals(0, $this->mockHandler->count());
     }
