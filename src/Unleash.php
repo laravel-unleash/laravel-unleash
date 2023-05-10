@@ -92,7 +92,7 @@ class Unleash
             }
 
             if (!$strategy instanceof Strategy && !$strategy instanceof DynamicStrategy) {
-                throw new \Exception("${$className} does not implement base Strategy/DynamicStrategy.");
+                throw new \Exception($className . ' does not implement base Strategy/DynamicStrategy.');
             }
 
             $params = Arr::get($strategyData, 'parameters', []);
