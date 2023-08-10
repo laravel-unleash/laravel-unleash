@@ -1,9 +1,9 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash\Tests\Strategies;
+namespace LaravelUnleash\Tests\Strategies;
 
 use Illuminate\Http\Request;
-use MikeFrancis\LaravelUnleash\Strategies\ApplicationHostnameStrategy;
+use LaravelUnleash\Strategies\ApplicationHostnameStrategy;
 use PHPUnit\Framework\TestCase;
 
 class ApplicationHostnameStrategyTest extends TestCase

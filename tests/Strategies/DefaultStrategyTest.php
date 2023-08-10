@@ -1,10 +1,10 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash\Tests\Strategies;
+namespace LaravelUnleash\Tests\Strategies;
 
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
-use MikeFrancis\LaravelUnleash\Strategies\DefaultStrategy;
+use LaravelUnleash\Strategies\DefaultStrategy;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash;
+namespace LaravelUnleash;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
-use MikeFrancis\LaravelUnleash\Unleash;
-use MikeFrancis\LaravelUnleash\Client;
+use LaravelUnleash\Unleash;
+use LaravelUnleash\Client;
 use GuzzleHttp\ClientInterface;
 
 class ServiceProvider extends IlluminateServiceProvider

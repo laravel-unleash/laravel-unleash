@@ -1,6 +1,6 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash\Tests\Stubs;
+namespace LaravelUnleash\Tests\Stubs;
 
 use Illuminate\Http\Request;
 

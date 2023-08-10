@@ -1,9 +1,9 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash\Tests\Stubs;
+namespace LaravelUnleash\Tests\Stubs;
 
 use Illuminate\Http\Request;
-use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
+use LaravelUnleash\Strategies\Contracts\Strategy;
 
 class ImplementedStrategy implements Strategy
 {

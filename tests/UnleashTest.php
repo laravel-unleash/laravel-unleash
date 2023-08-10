@@ -1,6 +1,6 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash\Tests;
+namespace LaravelUnleash\Tests;
 
 use Exception;
 use GuzzleHttp\Client;
@@ -9,10 +9,10 @@ use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Http\Request;
-use MikeFrancis\LaravelUnleash\Tests\Stubs\ImplementedStrategy;
-use MikeFrancis\LaravelUnleash\Tests\Stubs\ImplementedStrategyThatIsDisabled;
-use MikeFrancis\LaravelUnleash\Tests\Stubs\NonImplementedStrategy;
-use MikeFrancis\LaravelUnleash\Unleash;
+use LaravelUnleash\Tests\Stubs\ImplementedStrategy;
+use LaravelUnleash\Tests\Stubs\ImplementedStrategyThatIsDisabled;
+use LaravelUnleash\Tests\Stubs\NonImplementedStrategy;
+use LaravelUnleash\Unleash;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Exception\JsonException;
 

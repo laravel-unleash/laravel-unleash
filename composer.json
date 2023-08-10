@@ -14,12 +14,12 @@
     },
     "autoload": {
         "psr-4": {
-            "MikeFrancis\\LaravelUnleash\\": "src/"
+            "LaravelUnleash\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MikeFrancis\\LaravelUnleash\\Tests\\": "tests/"
+            "LaravelUnleash\\Tests\\": "tests/"
         }
     },
     "license": "MIT",
@@ -32,11 +32,11 @@
     "extra": {
         "laravel": {
             "providers": [
-                "MikeFrancis\\LaravelUnleash\\ServiceProvider"
+                "LaravelUnleash\\ServiceProvider"
             ],
             "aliases": {
-                "Unleash": "MikeFrancis\\LaravelUnleash\\Facades\\Unleash",
-                "Feature": "MikeFrancis\\LaravelUnleash\\Facades\\Feature"
+                "Unleash": "LaravelUnleash\\Facades\\Unleash",
+                "Feature": "LaravelUnleash\\Facades\\Feature"
             }
         }
     }

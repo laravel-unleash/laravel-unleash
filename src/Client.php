@@ -1,6 +1,6 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash;
+namespace LaravelUnleash;
 
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Contracts\Config\Repository as Config;

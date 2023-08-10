@@ -1,6 +1,6 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash\Strategies\Contracts;
+namespace LaravelUnleash\Strategies\Contracts;
 
 use Illuminate\Http\Request;
 

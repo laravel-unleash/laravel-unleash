@@ -1,5 +1,5 @@
 <?php
-namespace MikeFrancis\LaravelUnleash\Facades;
+namespace LaravelUnleash\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

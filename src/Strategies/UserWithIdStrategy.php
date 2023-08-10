@@ -1,10 +1,10 @@
 <?php
 
-namespace MikeFrancis\LaravelUnleash\Strategies;
+namespace LaravelUnleash\Strategies;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use MikeFrancis\LaravelUnleash\Strategies\Contracts\Strategy;
+use LaravelUnleash\Strategies\Contracts\Strategy;
 
 class UserWithIdStrategy implements Strategy
 {
