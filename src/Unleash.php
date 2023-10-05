@@ -37,8 +37,9 @@ class Unleash
         try {
             $features = $this->getCachedFeatures();
 
-            // Always store the failover cache, in case it is turned on during failure scenarios.
-            $this->cache->forever('unleash.features.failover', $features);
+            if ($this->config->get('unleash.cache.failover') === true) {
+                $this->cache->forever('unleash.features.failover', $features);
+            }
 
             return $features;
         } catch (TransferException | JsonException $e) {
